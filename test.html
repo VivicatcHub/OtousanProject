@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture de texte en hiragana</title>
+</head>
+
+<body>
+    <input type="text" id="textInput" placeholder="ひらがなでテキストを入力してください">
+    <br><br>
+    <label for="rate">Vitesse de lecture :</label>
+    <input type="number" id="rate" value="1" min="0.1" max="10" step="0.1">
+    <br><br>
+    <button onclick="speakText()">テキストを読む</button>
+
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=zX8b6mpv"></script>
+    <script>
+        responsiveVoice.speak("こんにちは、世界", "Japanese Female");
+    </script>
+
+</body>
+
+</html>

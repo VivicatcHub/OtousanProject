@@ -3,6 +3,9 @@ if (I === null) {
     I = 1;
     localStorage.setItem('I', I);
 }
+var CASES = [];
+var PLAY = 0;
+var DICORETURN = {};
 
 async function RecupSheetDatas(ID, TITLE, RANGE) {
     try {
@@ -24,12 +27,12 @@ async function TraiterSheetDatas(DATA) {
         }
     })
     DATA.table.rows.forEach(row => {
-        Dico[row.c[0].v] = {};
+        Dico[String(row.c[0].v)] = {};
         var cp = 1;
         Liste.forEach(el => {
             if (row.c[cp] !== null) {
                 // console.log(row.c[0].v, el, row.c[cp].v)
-                Dico[row.c[0].v][el] = row.c[cp].v;
+                Dico[String(row.c[0].v)][el] = row.c[cp].v;
             }
             cp++;
         })
@@ -152,13 +155,127 @@ function Modif() {
     location.reload();
 }
 
-async function general() {
-    var DicoReturn = await DatasVictory(DATAS_RANGE);
-    console.log("DicoReturn:", DicoReturn);
-    var text = "";
-    for (let i = 1; i < 49; i++) {
-        mot = DicoReturn["Mots"][i];
-        text += `<img src='${mot["Image"]}'>${mot["Mot"]}</img><br>`;
+function SpeakTextH(TEXT) {
+    var rate = 0.8;
+    var msg = new SpeechSynthesisUtterance();
+    msg.text = TEXT;
+    msg.lang = 'ja-JP'; // Définir la langue à japonais
+    msg.rate = rate; // Définir la vitesse de lecture
+
+    // Utiliser la synthèse vocale pour lire le texte
+    window.speechSynthesis.speak(msg);
+}
+
+function SpeakTextF(TEXT) {
+    responsiveVoice.speak(TEXT, "Japanese Female");
+}
+
+function ValeurAleatoireDico(DATA) {
+    const Keys = Object.keys(DATA);
+    const AleaKey = Keys[Math.floor(Math.random() * Keys.length)];
+    return AleaKey;
+}
+
+function ValeurAleatoireListe(LIST) {
+    // console.log(LIST)
+    const Alea = Math.floor(Math.random() * LIST.length);
+    return LIST[Alea];
+}
+
+function SupprimerValeurListe(LIST, valeur) {
+    const index = LIST.indexOf(valeur);
+    if (index > -1) {
+        LIST.splice(index, 1); // Supprime l'élément à l'index spécifié
     }
-    document.getElementById('container').innerHTML = text;
+}
+
+function CreerListe(X, Y, DATA) {
+    var Result = [];
+    let Nb = (X * Y) / 2;
+    let TempData = { ...DATA };
+    for (let i = 0; i < Nb; i++) {
+        AleaKey = ValeurAleatoireDico(TempData);
+        delete TempData[AleaKey];
+        Result.push(AleaKey);
+    }
+    return Result;
+}
+
+function CreerGrille(Y, X, DATA) {
+    let Liste = CreerListe(X, Y, DATA);
+    // console.log(DATA);
+    var Grille = `<div style='width: ${Y * 125}px;' class='grille'>`;
+    for (let x = 0; x < X; x++) {
+        for (let y = 0; y < Y; y++) {
+            let Nb = x * Y + y + 1;
+            let Num = ValeurAleatoireListe(Liste);
+            CASES.push(Num);
+            // console.log(Num, DATA[Num]);
+            if (DATA[Num]["Image"] === null) {
+                Grille += `<button id="${Nb}" class="button-grille" onclick="Click(${Nb}, ${Num})"><p class="p-grille">${DATA[Num]["Mot"]}</p></button>`
+            } else {
+                Grille += `<button id="${Nb}" class="button-grille" onclick="Click(${Nb}, ${Num})"><img class="img-grille" src="${DATA[Num]["Image"]}"></img></button>`
+            }
+        }
+        Grille += "<br>";
+    }
+    Grille += "</div>"
+    return Grille;
+}
+
+function Click(NB, NUM) {
+    if (NUM == PLAY) {
+        // console.log("fiuuu");
+        let as = document.getElementById(String(NB));
+        document.getElementById('wtf').innerHTML = DICORETURN["Mots"][PLAY]["Mot"] + "<br>" + DICORETURN["Mots"][PLAY]["Hiragana"] + " - " + DICORETURN["Mots"][PLAY]["Kanji"];
+        as.style.visibility = "hidden";
+        SupprimerValeurListe(CASES, String(NUM));
+        if (CASES.length >= 1) {
+            PLAY = ValeurAleatoireListe(CASES);
+            // console.log(CASES, PLAY)
+            SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+            document.getElementById('son-h').onclick = function() {
+                SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
+            };
+            document.getElementById('son-f').onclick = function() {
+                SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+            };
+        } else {
+            alert("Fini");
+        }
+    } else {
+        console.log("raté")
+        for (let i = 1; i < 12*7; i++) {
+            let as = document.getElementById(String(i));
+            if (as.style.visibility === "hidden") {
+                CASES.push(CreerListe(1, 1, DICORETURN["Mots"]));
+                let cas = ValeurAleatoireListe(CASES);
+                as.onclick = function() {
+                    Click(i, cas);
+                }
+                if (DICORETURN["Mots"][cas]["Image"] === null) {
+                    as.innerHTML = `<p class="p-grille">${DICORETURN["Mots"][cas]["Mot"]}</p>`;
+                } else {
+                    as.innerHTML = `<img class="img-grille" src="${DICORETURN["Mots"][cas]["Image"]}"></img>`;
+                }
+                as.style.visibility = "";
+                break;
+            }
+        }
+    }
+}
+
+async function general() {
+    DICORETURN = await DatasVictory(DATAS_RANGE);
+    console.log("DicoReturn:", DICORETURN);
+    document.getElementById('container').innerHTML = CreerGrille(12, 7, DICORETURN["Mots"]);
+    PLAY = ValeurAleatoireListe(CASES);
+    document.getElementById('wtf').innerHTML = "";
+    SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+    document.getElementById('son-h').onclick = function() {
+        SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
+    };
+    document.getElementById('son-f').onclick = function() {
+        SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+    };
 }
