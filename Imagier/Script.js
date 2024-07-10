@@ -229,7 +229,9 @@ function Click(NB, NUM) {
         let as = document.getElementById(String(NB));
         document.getElementById('wtf').innerHTML = DICORETURN["Mots"][PLAY]["Mot"] + "<br>" + DICORETURN["Mots"][PLAY]["Hiragana"] + " - " + DICORETURN["Mots"][PLAY]["Kanji"];
         as.style.visibility = "hidden";
+        console.log(CASES);
         SupprimerValeurListe(CASES, String(NUM));
+        console.log(CASES);
         if (CASES.length >= 1) {
             PLAY = ValeurAleatoireListe(CASES);
             // console.log(CASES, PLAY)
@@ -248,7 +250,6 @@ function Click(NB, NUM) {
         for (let i = 1; i < 12*7; i++) {
             let as = document.getElementById(String(i));
             if (as.style.visibility === "hidden") {
-                CASES.push(CreerListe(1, 1, DICORETURN["Mots"]));
                 let cas = ValeurAleatoireListe(CASES);
                 as.onclick = function() {
                     Click(i, cas);
