@@ -1,25 +1,81 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecture de texte en hiragana</title>
+    <title>Grille avec Dégradé</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(10, 40px);
+            grid-template-rows: repeat(6, 40px);
+            gap: 2px;
+        }
+
+        .cell {
+            width: 40px;
+            height: 40px;
+        }
+    </style>
 </head>
 
 <body>
-    <input type="text" id="textInput" placeholder="ひらがなでテキストを入力してください">
-    <br><br>
-    <label for="rate">Vitesse de lecture :</label>
-    <input type="number" id="rate" value="1" min="0.1" max="10" step="0.1">
-    <br><br>
-    <button onclick="speakText()">テキストを読む</button>
-
-    <script src="https://code.responsivevoice.org/responsivevoice.js?key=zX8b6mpv"></script>
+    <div id="grid"></div>
     <script>
-        responsiveVoice.speak("こんにちは、世界", "Japanese Female");
-    </script>
+        const grid = document.getElementById('grid');
 
+        // Define start and end colors
+        const startColor = [255, 0, 0]; // Red
+        const endColor = [0, 0, 255]; // Blue
+
+        // Function to interpolate between two colors
+        function interpolateColor(start, end, factor) {
+            return start.map((startVal, i) => Math.round(startVal + factor * (end[i] - startVal)));
+        }
+
+        // Convert RGB array to CSS hex color
+        function rgbToHex(rgb) {
+            return `#${rgb.map(val => {
+                const hex = val.toString(16).padStart(2, '0');
+                return hex;
+            }).join('')}`;
+        }
+
+        // Total number of cells
+        const numCols = 10;
+        const numRows = 6;
+        const totalCells = numCols * numRows;
+
+        // Create grid cells with interpolated colors
+        for (let row = 0; row < numRows; row++) {
+            for (let col = 0; col < numCols; col++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+
+                // Calculate interpolation factor based on cell position
+                const factor = (row * numCols + col) / (totalCells - 1);
+
+                // Calculate interpolated color
+                const interpolatedColor = interpolateColor(startColor, endColor, factor);
+
+                // Set cell background color
+                cell.style.backgroundColor = rgbToHex(interpolatedColor);
+
+                grid.appendChild(cell);
+            }
+        }
+
+    </script>
 </body>
 
 </html>

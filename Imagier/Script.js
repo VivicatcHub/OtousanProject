@@ -189,16 +189,42 @@ function SupprimerValeurListe(LIST, valeur) {
     }
 }
 
+function SameVoice(KEY, RESULT) {
+    for (let i = 0; i < RESULT.length; i++) {
+        // console.log(DICORETURN["Mots"][KEY]["Hiragana"], DICORETURN["Mots"][RESULT[i]]["Hiragana"])
+        if (DICORETURN["Mots"][KEY]["Hiragana"] === DICORETURN["Mots"][RESULT[i]]["Hiragana"]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function CreerListe(X, Y, DATA) {
     var Result = [];
     let Nb = (X * Y) / 2;
     let TempData = { ...DATA };
     for (let i = 0; i < Nb; i++) {
         AleaKey = ValeurAleatoireDico(TempData);
+        while (SameVoice(AleaKey, Result)) {
+            AleaKey = ValeurAleatoireDico(TempData);
+        }
         delete TempData[AleaKey];
         Result.push(AleaKey);
     }
     return Result;
+}
+
+function rgbToHex(RGB) {
+    return `#${RGB.map(val => {
+        const hex = val.toString(16).padStart(2, '0');
+        return hex;
+    }).join('')}`;
+}
+
+function interpolateColor(FACTOR) {
+    const start = [255, 127, 0]; // Orange
+    const end = [127, 0, 255]; // Violet
+    return start.map((startVal, i) => Math.round(startVal + FACTOR * (end[i] - startVal)));
 }
 
 function CreerGrille(Y, X, DATA) {
@@ -212,7 +238,8 @@ function CreerGrille(Y, X, DATA) {
             CASES.push(Num);
             // console.log(Num, DATA[Num]);
             if (DATA[Num]["Image"] === null) {
-                Grille += `<button id="${Nb}" class="button-grille" onclick="Click(${Nb}, ${Num})"><p class="p-grille">${DATA[Num]["Mot"]}</p></button>`
+                console.log(rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1))))
+                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num})"><p class="p-grille" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;">${DATA[Num]["Mot"].toUpperCase()}</p></button>`
             } else {
                 Grille += `<button id="${Nb}" class="button-grille" onclick="Click(${Nb}, ${Num})"><img class="img-grille" src="${DATA[Num]["Image"]}"></img></button>`
             }
@@ -250,12 +277,14 @@ function Click(NB, NUM) {
         for (let i = 1; i < 12*7; i++) {
             let as = document.getElementById(String(i));
             if (as.style.visibility === "hidden") {
-                let cas = ValeurAleatoireListe(CASES);
+                console.log(CASES, ValeurAleatoireDico(DICORETURN["Mots"]))
+                let cas = ValeurAleatoireDico(DICORETURN["Mots"]);
+                CASES.push(cas);
                 as.onclick = function() {
                     Click(i, cas);
                 }
                 if (DICORETURN["Mots"][cas]["Image"] === null) {
-                    as.innerHTML = `<p class="p-grille">${DICORETURN["Mots"][cas]["Mot"]}</p>`;
+                    as.innerHTML = `<p class="p-grille">${DICORETURN["Mots"][cas]["Mot"].toUpperCase()}</p>`;
                 } else {
                     as.innerHTML = `<img class="img-grille" src="${DICORETURN["Mots"][cas]["Image"]}"></img>`;
                 }
@@ -268,7 +297,7 @@ function Click(NB, NUM) {
 
 async function general() {
     DICORETURN = await DatasVictory(DATAS_RANGE);
-    console.log("DicoReturn:", DICORETURN);
+    // console.log("DicoReturn:", DICORETURN);
     document.getElementById('container').innerHTML = CreerGrille(12, 7, DICORETURN["Mots"]);
     PLAY = ValeurAleatoireListe(CASES);
     document.getElementById('wtf').innerHTML = "";
