@@ -231,7 +231,7 @@ function CreerGrille(Y, X, DATA) {
     let Liste = CreerListe(X, Y, DATA);
     // console.log(DATA);
     if (window.innerWidth < 1000) {
-        var Grille = `<div style='width: ${Y * 50}px;' class='grille'>`;
+        var Grille = `<div style='width: ${Y * 75}px;' class='grille'>`;
     } else {
         var Grille = `<div style='width: ${Y * 125}px;' class='grille'>`;
     }
@@ -306,8 +306,8 @@ async function general() {
         X = Math.floor((window.innerWidth * 0.9) / 125);
         Y = Math.floor((window.innerHeight) / 125);
     } else {
-        X = Math.floor((window.innerWidth) / 50);
-        Y = Math.floor((window.innerHeight * 0.8) / 50);
+        X = Math.floor((window.innerWidth) / 75);
+        Y = Math.floor((window.innerHeight * 0.8) / 75);
     }
     document.getElementById('container').innerHTML = CreerGrille(X, Y, DICORETURN["Mots"]);
     PLAY = ValeurAleatoireListe(CASES);
