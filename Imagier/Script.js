@@ -230,7 +230,11 @@ function interpolateColor(FACTOR) {
 function CreerGrille(Y, X, DATA) {
     let Liste = CreerListe(X, Y, DATA);
     // console.log(DATA);
-    var Grille = `<div style='width: ${Y * 125}px;' class='grille'>`;
+    if (window.innerWidth < 1000) {
+        var Grille = `<div style='width: ${Y * 50}px;' class='grille'>`;
+    } else {
+        var Grille = `<div style='width: ${Y * 125}px;' class='grille'>`;
+    }
     for (let x = 0; x < X; x++) {
         for (let y = 0; y < Y; y++) {
             let Nb = x * Y + y + 1;
@@ -239,9 +243,9 @@ function CreerGrille(Y, X, DATA) {
             // console.log(Num, DATA[Num]);
             if (DATA[Num]["Image"] === null) {
                 console.log(rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1))))
-                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num})"><p class="p-grille" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;">${DATA[Num]["Mot"].toUpperCase()}</p></button>`
+                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y})"><p class="p-grille" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;">${DATA[Num]["Mot"].toUpperCase()}</p></button>`
             } else {
-                Grille += `<button id="${Nb}" class="button-grille" onclick="Click(${Nb}, ${Num})"><img class="img-grille" src="${DATA[Num]["Image"]}"></img></button>`
+                Grille += `<button id="${Nb}" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y})"><img class="img-grille" src="${DATA[Num]["Image"]}"></img></button>`
             }
         }
         Grille += "<br>";
@@ -250,7 +254,7 @@ function CreerGrille(Y, X, DATA) {
     return Grille;
 }
 
-function Click(NB, NUM) {
+function Click(NB, NUM, X, Y) {
     if (NUM == PLAY) {
         // console.log("fiuuu");
         let as = document.getElementById(String(NB));
@@ -274,7 +278,7 @@ function Click(NB, NUM) {
         }
     } else {
         console.log("raté")
-        for (let i = 1; i < 12*7; i++) {
+        for (let i = 1; i < X * Y; i++) {
             let as = document.getElementById(String(i));
             if (as.style.visibility === "hidden") {
                 console.log(CASES, ValeurAleatoireDico(DICORETURN["Mots"]))
@@ -298,7 +302,14 @@ function Click(NB, NUM) {
 async function general() {
     DICORETURN = await DatasVictory(DATAS_RANGE);
     // console.log("DicoReturn:", DICORETURN);
-    document.getElementById('container').innerHTML = CreerGrille(12, 7, DICORETURN["Mots"]);
+    if (window.innerWidth > 1000) { 
+        X = Math.floor((window.innerWidth * 0.9) / 125);
+        Y = Math.floor((window.innerHeight) / 125);
+    } else {
+        X = Math.floor((window.innerWidth) / 50);
+        Y = Math.floor((window.innerHeight * 0.8) / 50);
+    }
+    document.getElementById('container').innerHTML = CreerGrille(X, Y, DICORETURN["Mots"]);
     PLAY = ValeurAleatoireListe(CASES);
     document.getElementById('wtf').innerHTML = "";
     SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
