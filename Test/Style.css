@@ -25,6 +25,9 @@
 }
 
 .button-grille {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     width: 125px;
     height: 125px;
     cursor: pointer;
