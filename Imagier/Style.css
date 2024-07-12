@@ -49,6 +49,10 @@
     font-size: large;
 }
 
+#wtf {
+    text-align: center;
+}
+
 @media (max-width: 1000px) {
     .button-grille {
         width: 75px;

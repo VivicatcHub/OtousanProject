@@ -1,81 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grille avec Dégradé</title>
+    <title>Formulaire avec menus déroulants et input</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            margin: 20px;
         }
-
-        #grid {
-            display: grid;
-            grid-template-columns: repeat(10, 40px);
-            grid-template-rows: repeat(6, 40px);
-            gap: 2px;
+        .form-group {
+            margin-bottom: 15px;
         }
-
-        .cell {
-            width: 40px;
-            height: 40px;
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
         }
     </style>
 </head>
-
 <body>
-    <div id="grid"></div>
-    <script>
-        const grid = document.getElementById('grid');
 
-        // Define start and end colors
-        const startColor = [255, 0, 0]; // Red
-        const endColor = [0, 0, 255]; // Blue
+    <h1>Formulaire</h1>
 
-        // Function to interpolate between two colors
-        function interpolateColor(start, end, factor) {
-            return start.map((startVal, i) => Math.round(startVal + factor * (end[i] - startVal)));
-        }
+    <div class="form-group">
+        <label for="language">Choisir la langue :</label>
+        <select id="language" name="language">
+            <option value="jp-JP">Japonais (jp-JP)</option>
+            <option value="fr-FR">Français (fr-FR)</option>
+        </select>
+    </div>
 
-        // Convert RGB array to CSS hex color
-        function rgbToHex(rgb) {
-            return `#${rgb.map(val => {
-                const hex = val.toString(16).padStart(2, '0');
-                return hex;
-            }).join('')}`;
-        }
+    <div class="form-group">
+        <label for="number">Nombre (entre 1 et 50) :</label>
+        <input type="number" id="number" name="number" min="1" max="50" value="7">
+    </div>
 
-        // Total number of cells
-        const numCols = 10;
-        const numRows = 6;
-        const totalCells = numCols * numRows;
+    <div class="form-group">
+        <label for="category">Choisir la catégorie :</label>
+        <select id="category" name="category">
+            <option value="all">TOUS</option>
+            <option value="animals">Animaux</option>
+            <option value="body">Corps</option>
+        </select>
+    </div>
 
-        // Create grid cells with interpolated colors
-        for (let row = 0; row < numRows; row++) {
-            for (let col = 0; col < numCols; col++) {
-                const cell = document.createElement('div');
-                cell.className = 'cell';
-
-                // Calculate interpolation factor based on cell position
-                const factor = (row * numCols + col) / (totalCells - 1);
-
-                // Calculate interpolated color
-                const interpolatedColor = interpolateColor(startColor, endColor, factor);
-
-                // Set cell background color
-                cell.style.backgroundColor = rgbToHex(interpolatedColor);
-
-                grid.appendChild(cell);
-            }
-        }
-
-    </script>
 </body>
-
 </html>

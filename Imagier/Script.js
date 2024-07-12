@@ -6,6 +6,12 @@ if (I === null) {
 var CASES = [];
 var PLAY = 0;
 var DICORETURN = {};
+var LANGUE = localStorage.getItem('Lang');
+if (LANGUE === null) {
+    LANGUE = "en-EN";
+    localStorage.setItem('Lang', LANGUE);
+}
+var DICOLANG = {};
 
 async function RecupSheetDatas(ID, TITLE, RANGE) {
     try {
@@ -254,11 +260,19 @@ function CreerGrille(Y, X, DATA) {
     return Grille;
 }
 
+function IfIsntUndefined(VAL) {
+    if (VAL === undefined) {
+        return "";
+    } else {
+        return `(${VAL})`;
+    }
+}
+
 function Click(NB, NUM, X, Y) {
     if (NUM == PLAY) {
         // console.log("fiuuu");
         let as = document.getElementById(String(NB));
-        document.getElementById('wtf').innerHTML = DICORETURN["Mots"][PLAY]["Mot"] + "<br>" + DICORETURN["Mots"][PLAY]["Hiragana"] + " - " + DICORETURN["Mots"][PLAY]["Kanji"];
+        document.getElementById('wtf').innerHTML = DICORETURN["Mots"][PLAY]["Mot"] + "<br>" + DICORETURN["Mots"][PLAY]["Hiragana"] + IfIsntUndefined(DICORETURN["Mots"][PLAY]["Kanji"]);
         as.style.visibility = "hidden";
         console.log(CASES);
         SupprimerValeurListe(CASES, String(NUM));
@@ -267,10 +281,10 @@ function Click(NB, NUM, X, Y) {
             PLAY = ValeurAleatoireListe(CASES);
             // console.log(CASES, PLAY)
             SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
-            document.getElementById('son-h').onclick = function() {
+            document.getElementById('son-h').onclick = function () {
                 SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
             };
-            document.getElementById('son-f').onclick = function() {
+            document.getElementById('son-f').onclick = function () {
                 SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
             };
         } else {
@@ -284,7 +298,7 @@ function Click(NB, NUM, X, Y) {
                 console.log(CASES, ValeurAleatoireDico(DICORETURN["Mots"]))
                 let cas = ValeurAleatoireDico(DICORETURN["Mots"]);
                 CASES.push(cas);
-                as.onclick = function() {
+                as.onclick = function () {
                     Click(i, cas);
                 }
                 if (DICORETURN["Mots"][cas]["Image"] === null) {
@@ -299,24 +313,52 @@ function Click(NB, NUM, X, Y) {
     }
 }
 
+function Launch() {
+    X = document.getElementById("number-x").value;
+    Y = document.getElementById("number-y").value;
+    document.getElementById('container').innerHTML = CreerGrille(X, Y, DICORETURN["Mots"]);
+    PLAY = ValeurAleatoireListe(CASES);
+    document.getElementById('wtf').innerHTML = "";
+    document.getElementById("audio").innerHTML = `<button id="son-f"><img src="../speaker_f.png" alt="JOUER"></img></button>`;
+    // <button id="son-h"><img src="../speaker_h.png" alt="JOUER"></img></button>
+    /*
+    SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+    document.getElementById('son-h').onclick = function () {
+        SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
+    };
+    */
+    document.getElementById('son-f').onclick = function () {
+        SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+    };
+}
+
+function ModifLang() {
+    var selectedOption = document.getElementById("language").value;
+    localStorage.setItem('Lang', selectedOption);
+    location.reload();
+
+}
+
 async function general() {
     DICORETURN = await DatasVictory(DATAS_RANGE);
     // console.log("DicoReturn:", DICORETURN);
-    if (window.innerWidth > 1000) { 
+    if (window.innerWidth > 1000) {
         X = Math.floor((window.innerWidth * 0.9) / 125);
         Y = Math.floor((window.innerHeight) / 125);
     } else {
         X = Math.floor((window.innerWidth) / 75);
-        Y = Math.floor((window.innerHeight * 0.8) / 75);
+        Y = Math.floor((window.innerHeight) / 75) + 1;
     }
-    document.getElementById('container').innerHTML = CreerGrille(X, Y, DICORETURN["Mots"]);
-    PLAY = ValeurAleatoireListe(CASES);
-    document.getElementById('wtf').innerHTML = "";
-    SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
-    document.getElementById('son-h').onclick = function() {
-        SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
-    };
-    document.getElementById('son-f').onclick = function() {
-        SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
-    };
+    var Temp = "";
+    Object.keys(DICORETURN["Langue"]).forEach(lang => {
+        lang = DICORETURN["Langue"][lang];
+        if (lang["Langue"] === LANGUE) {
+            DICOLANG = lang;
+            Temp += `<option selected value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+        } else {
+            Temp += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+        }
+    })
+    var Text = `<button onclick="Launch()">${DICOLANG["Play"]}</button><div><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}">`;
+    document.getElementById("container").innerHTML = Text;
 }
