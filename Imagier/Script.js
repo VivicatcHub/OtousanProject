@@ -178,6 +178,7 @@ function SpeakTextF(TEXT) {
 
 function ValeurAleatoireDico(DATA) {
     const Keys = Object.keys(DATA);
+    console.log(Keys)
     const AleaKey = Keys[Math.floor(Math.random() * Keys.length)];
     return AleaKey;
 }
@@ -205,11 +206,16 @@ function SameVoice(KEY, RESULT) {
     return false;
 }
 
-function CreerListe(X, Y, DATA) {
+function CreerListe(X, Y, DATA, CAT) {
     var Result = [];
     let Nb = (X * Y) / 2;
-    let TempData = { ...DATA };
-    for (let i = 0; i < Nb; i++) {
+    if (CAT === "all") {
+        var TempData = { ...DATA };
+    } else {
+        var TempData = Object.fromEntries(Object.entries(DATA).filter(([key, value]) => value["Catégorie"] === parseInt(CAT)));
+    }
+    let Len = Object.keys(TempData).length;
+    for (let i = 0; i < Math.min(Nb, Len); i++) {
         AleaKey = ValeurAleatoireDico(TempData);
         while (SameVoice(AleaKey, Result)) {
             AleaKey = ValeurAleatoireDico(TempData);
@@ -217,6 +223,7 @@ function CreerListe(X, Y, DATA) {
         delete TempData[AleaKey];
         Result.push(AleaKey);
     }
+    console.log(Nb, Len, Math.min(Nb, Len), CAT)
     return Result;
 }
 
@@ -233,8 +240,8 @@ function interpolateColor(FACTOR) {
     return start.map((startVal, i) => Math.round(startVal + FACTOR * (end[i] - startVal)));
 }
 
-function CreerGrille(Y, X, DATA) {
-    let Liste = CreerListe(X, Y, DATA);
+function CreerGrille(Y, X, DATA, CAT) {
+    let Liste = CreerListe(X, Y, DATA, CAT);
     // console.log(DATA);
     if (window.innerWidth < 1000) {
         var Grille = `<div style='width: ${Y * 75}px;' class='grille'>`;
@@ -249,9 +256,9 @@ function CreerGrille(Y, X, DATA) {
             // console.log(Num, DATA[Num]);
             if (DATA[Num]["Image"] === null) {
                 console.log(rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1))))
-                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y})"><p class="p-grille" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;">${DATA[Num]["Mot"].toUpperCase()}</p></button>`
+                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y}, ${CAT})"><p class="p-grille" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;">${DATA[Num]["Mot"].toUpperCase()}</p></button>`
             } else {
-                Grille += `<button id="${Nb}" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y})"><img class="img-grille" src="${DATA[Num]["Image"]}"></img></button>`
+                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y}, ${CAT})"><img class="img-grille" src="${DATA[Num]["Image"]}"></img></button>`
             }
         }
         Grille += "<br>";
@@ -289,7 +296,7 @@ function IfIsntUndefined(VAL) {
     }
 }
 
-function Click(NB, NUM, X, Y) {
+function Click(NB, NUM, X, Y, CAT) {
     if (NUM == PLAY) {
         // console.log("fiuuu");
         let as = document.getElementById(String(NB));
@@ -302,9 +309,9 @@ function Click(NB, NUM, X, Y) {
             PLAY = ValeurAleatoireListe(CASES);
             // console.log(CASES, PLAY)
             SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
-            document.getElementById('son-h').onclick = function () {
+            /*document.getElementById('son-h').onclick = function () {
                 SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
-            };
+            };*/
             document.getElementById('son-f').onclick = function () {
                 SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
             };
@@ -313,19 +320,25 @@ function Click(NB, NUM, X, Y) {
         }
     } else {
         console.log("raté")
-        for (let i = 1; i < X * Y; i++) {
+        for (let i = 1; i < X * Y + 1; i++) {
             let as = document.getElementById(String(i));
             if (as.style.visibility === "hidden") {
                 console.log(CASES, ValeurAleatoireDico(DICORETURN["Mots"]))
-                let cas = ValeurAleatoireDico(DICORETURN["Mots"]);
+                if (CAT === "all") {
+                    var cas = ValeurAleatoireDico(DICORETURN["Mots"]);
+                } else {
+                    var cas = ValeurAleatoireDico(Object.fromEntries(Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value["Catégorie"] === parseInt(CAT))));
+                }
                 CASES.push(cas);
                 as.onclick = function () {
-                    Click(i, cas);
+                    Click(i, cas, X, Y, CAT);
                 }
+                let y = Math.floor(i / Y) + 1;
+                let x = i % Y;
                 if (DICORETURN["Mots"][cas]["Image"] === null) {
-                    as.innerHTML = `<p class="p-grille">${DICORETURN["Mots"][cas]["Mot"].toUpperCase()}</p>`;
+                    as.innerHTML = `<p style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;" class="p-grille">${DICORETURN["Mots"][cas]["Mot"].toUpperCase()}</p>`;
                 } else {
-                    as.innerHTML = `<img class="img-grille" src="${DICORETURN["Mots"][cas]["Image"]}"></img>`;
+                    as.innerHTML = `<img style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;" class="img-grille" src="${DICORETURN["Mots"][cas]["Image"]}"></img>`;
                 }
                 as.style.visibility = "";
                 break;
@@ -337,7 +350,8 @@ function Click(NB, NUM, X, Y) {
 function Launch() {
     X = document.getElementById("number-x").value;
     Y = document.getElementById("number-y").value;
-    document.getElementById('container').innerHTML = CreerGrille(X, Y, DICORETURN["Mots"]);
+    CAT = document.getElementById("catégorie").value;
+    document.getElementById('container').innerHTML = CreerGrille(X, Y, DICORETURN["Mots"], CAT);
     PLAY = ValeurAleatoireListe(CASES);
     document.getElementById('wtf').innerHTML = "";
     document.getElementById("audio").innerHTML = `<button id="son-f"><img src="../speaker_f.png" alt="JOUER"></img></button>`;
@@ -381,6 +395,11 @@ async function general() {
         }
     })
     var Text = `<button onclick="Launch()">${DICOLANG["Play"]}</button><div><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}">`;
-    document.getElementById("container").innerHTML = Text;
+    Temp = `<select id="catégorie" name="catégorie"><option value="all">TOUT</option>`;
+    Object.keys(DICORETURN["Catégorie"]).forEach(cat => {
+        cati = DICORETURN["Catégorie"][cat];
+        Temp += `<option value="${cat}">${cati["Nom"]}</option>`;
+    })
+    document.getElementById("container").innerHTML = Text + Temp + "</select>";
     adjustFontSize;
 }
