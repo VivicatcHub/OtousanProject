@@ -260,6 +260,27 @@ function CreerGrille(Y, X, DATA) {
     return Grille;
 }
 
+function adjustFontSize() {
+    const buttons = Array.from(document.getElementsByClassName('button-grille'));
+    buttons.forEach(button => {
+        const texts = Array.from(button.getElementsByClassName("p-grille"));
+        if (texts.length > 0) {
+            texts.forEach(t => {
+                let fontSize = parseInt(window.getComputedStyle(t).fontSize);
+                const padding = 5;  // Ajoutez un petit espace de 5 pixels pour que le texte soit légèrement plus petit que la case
+                while (t.scrollHeight > button.clientHeight - padding || t.scrollWidth > button.clientWidth - padding) {
+                    fontSize--;
+                    t.style.fontSize = fontSize + "px";
+                }
+            });
+        }
+    });
+}
+
+window.onload = adjustFontSize;
+window.onresize = adjustFontSize;
+
+
 function IfIsntUndefined(VAL) {
     if (VAL === undefined) {
         return "";
@@ -361,4 +382,5 @@ async function general() {
     })
     var Text = `<button onclick="Launch()">${DICOLANG["Play"]}</button><div><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}">`;
     document.getElementById("container").innerHTML = Text;
+    adjustFontSize;
 }

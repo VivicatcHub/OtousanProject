@@ -44,9 +44,10 @@
     max-width: 120px;
     max-height: 120px;
     align-content: center;
-    word-wrap: break-word;
     font-weight: bold;
     font-size: large;
+    word-break: keep-all;
+    overflow-wrap: break-word;
 }
 
 #wtf {
