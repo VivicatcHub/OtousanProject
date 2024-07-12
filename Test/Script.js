@@ -1,8 +1,5 @@
 var DICORETURN = {};
 
-window.onload = adjustFontSize;
-window.onresize = adjustFontSize;
-
 async function GeneralTest() {
     DICORETURN = await DatasVictory(DATAS_RANGE);
     if (window.innerWidth > 1000) {

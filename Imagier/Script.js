@@ -267,7 +267,7 @@ function adjustFontSize() {
         if (texts.length > 0) {
             texts.forEach(t => {
                 let fontSize = parseInt(window.getComputedStyle(t).fontSize);
-                const padding = 5;  // Ajoutez un petit espace de 5 pixels pour que le texte soit légèrement plus petit que la case
+                const padding = 1;  // Ajoutez un petit espace de 5 pixels pour que le texte soit légèrement plus petit que la case
                 while (t.scrollHeight > button.clientHeight - padding || t.scrollWidth > button.clientWidth - padding) {
                     fontSize--;
                     t.style.fontSize = fontSize + "px";
