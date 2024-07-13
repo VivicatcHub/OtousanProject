@@ -1,13 +1,63 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulaire avec menus déroulants et input</title>
+    <title>Traducteur Mot pour Mot</title>
 </head>
+
 <body>
+    <h1>Traducteur Mot pour Mot</h1>
+    <input type="text" id="inputText" placeholder="Entrez le texte à traduire">
+    <select id="language">
+        <option value="en">Anglais</option>
+        <option value="es">Espagnol</option>
+        <option value="de">Allemand</option>
+        <option value="it">Italien</option>
+    </select>
+    <button onclick="translateWord()">Traduire</button>
+    <p id="translatedText"></p>
 
-    <input type="text" id="hiragana" name="hiragana" pattern="[\u3040-\u309F\u30A0-\u30FF]+" title="Veuillez entrer uniquement des caractères Hiragana" required>
+    <script>
+        // translator.js
 
+        async function translateWord() {
+            const inputText = document.getElementById('inputText').value;
+            const targetLanguage = document.getElementById('language').value;
+
+            if (inputText.trim() === '') {
+                alert('Veuillez entrer un mot à traduire.');
+                return;
+            }
+
+            try {
+                const response = await fetch("https://libretranslate.com/translate", {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        q: inputText,
+                        source: 'auto',
+                        target: targetLanguage,
+                        format: 'text',
+                        api_key: ""
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+                console.log(data);
+                const translatedText = data.translatedText;
+
+                document.getElementById('translatedText').innerText = translatedText;
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la traduction.');
+            }
+        }
+
+    </script>
 </body>
+
 </html>

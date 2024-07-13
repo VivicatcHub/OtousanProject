@@ -6,12 +6,18 @@ if (I === null) {
 var CASES = [];
 var PLAY = 0;
 var DICORETURN = {};
-var LANGUE = localStorage.getItem('Lang');
-if (LANGUE === null) {
-    LANGUE = "en-EN";
-    localStorage.setItem('Lang', LANGUE);
+var LANGUEtoSEE = localStorage.getItem('LangS');
+if (LANGUEtoSEE === null) {
+    LANGUEtoSEE = "en-EN";
+    localStorage.setItem('LangS', LANGUEtoSEE);
 }
-var DICOLANG = {};
+var LANGUEtoTEACH = localStorage.getItem('LangT');
+if (LANGUEtoTEACH === null) {
+    LANGUEtoTEACH = "jp-JP";
+    localStorage.setItem('LangT', LANGUEtoTEACH);
+}
+var DICOLANGtoSEE = {};
+var DICOLANGtoTEACH = {};
 
 async function RecupSheetDatas(ID, TITLE, RANGE) {
     try {
@@ -162,6 +168,7 @@ function Modif() {
 }
 
 function SpeakTextH(TEXT) {
+    /*
     var rate = 0.8;
     var msg = new SpeechSynthesisUtterance();
     msg.text = TEXT;
@@ -169,16 +176,17 @@ function SpeakTextH(TEXT) {
     msg.rate = rate; // Définir la vitesse de lecture
 
     // Utiliser la synthèse vocale pour lire le texte
-    window.speechSynthesis.speak(msg);
+    window.speechSynthesis.speak(msg);*/
+    responsiveVoice.speak(TEXT, `${DICOLANGtoTEACH["Nom"]} Male`);
 }
 
 function SpeakTextF(TEXT) {
-    responsiveVoice.speak(TEXT, "Japanese Female");
+    responsiveVoice.speak(TEXT, `${DICOLANGtoTEACH["Nom"]} Female`);
 }
 
 function ValeurAleatoireDico(DATA) {
     const Keys = Object.keys(DATA);
-    console.log(Keys)
+    // console.log(Keys)
     const AleaKey = Keys[Math.floor(Math.random() * Keys.length)];
     return AleaKey;
 }
@@ -197,9 +205,41 @@ function SupprimerValeurListe(LIST, valeur) {
 }
 
 function SameVoice(KEY, RESULT) {
+    switch (LANGUEtoTEACH) {
+        case "jp-JP":
+            var Temp = "Hiragana";
+            break;
+        case "fr-FR":
+            var Temp = "Mot";
+            break;
+        default:
+            var Temp = LANGUEtoTEACH;
+            break;
+    }
     for (let i = 0; i < RESULT.length; i++) {
-        // console.log(DICORETURN["Mots"][KEY]["Hiragana"], DICORETURN["Mots"][RESULT[i]]["Hiragana"])
-        if (DICORETURN["Mots"][KEY]["Hiragana"] === DICORETURN["Mots"][RESULT[i]]["Hiragana"]) {
+        // console.log(DICORETURN["Mots"][KEY][Temp], DICORETURN["Mots"][RESULT[i]][Temp])
+        if (DICORETURN["Mots"][KEY][Temp] === DICORETURN["Mots"][RESULT[i]][Temp]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function SameWord(KEY, RESULT) {
+    switch (LANGUEtoSEE) {
+        case "jp-JP":
+            var Temp = "Hiragana";
+            break;
+        case "fr-FR":
+            var Temp = "Mot";
+            break;
+        default:
+            var Temp = LANGUEtoSEE;
+            break;
+    }
+    for (let i = 0; i < RESULT.length; i++) {
+        // console.log(DICORETURN["Mots"][KEY][Temp], DICORETURN["Mots"][RESULT[i]][Temp])
+        if (DICORETURN["Mots"][KEY][Temp] === DICORETURN["Mots"][RESULT[i]][Temp]) {
             return true;
         }
     }
@@ -209,21 +249,44 @@ function SameVoice(KEY, RESULT) {
 function CreerListe(X, Y, DATA, CAT) {
     var Result = [];
     let Nb = (X * Y) / 2;
+    switch (LANGUEtoTEACH) {
+        case "fr-FR":
+            var Temp = "Mot";
+            break;
+        case "jp-JP":
+            var Temp = "Hiragana";
+            break;
+        default:
+            var Temp = LANGUEtoTEACH;
+            break;
+    }
     if (CAT === "all") {
-        var TempData = { ...DATA };
+        var TempData = Object.entries(DATA)
+        .filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null).reduce((acc, [key, value]) => {
+            acc[key] = value;
+            return acc;
+        }, {});
     } else {
-        var TempData = Object.fromEntries(Object.entries(DATA).filter(([key, value]) => value["Catégorie"] === parseInt(CAT)));
+        var TempData = Object.fromEntries(Object.entries(DATA).filter(([key, value]) => value["Catégorie"] === parseInt(CAT) && value[Temp] !== undefined && value[Temp] !== null));
     }
     let Len = Object.keys(TempData).length;
+    console.log(TempData)
     for (let i = 0; i < Math.min(Nb, Len); i++) {
         AleaKey = ValeurAleatoireDico(TempData);
-        while (SameVoice(AleaKey, Result)) {
+        var cp = 0;
+        while (SameVoice(AleaKey, Result) || SameWord(AleaKey, Result)) {
+            // console.log(TempData, Result, AleaKey);
             AleaKey = ValeurAleatoireDico(TempData);
+            cp++;
+            if (cp > 100) {
+                console.log("break");
+                break;
+            }
         }
+        // alert('ui')
         delete TempData[AleaKey];
         Result.push(AleaKey);
     }
-    console.log(Nb, Len, Math.min(Nb, Len), CAT)
     return Result;
 }
 
@@ -250,15 +313,31 @@ function CreerGrille(Y, X, DATA, CAT) {
     }
     for (let x = 0; x < X; x++) {
         for (let y = 0; y < Y; y++) {
+            // console.log(x, y)
             let Nb = x * Y + y + 1;
             let Num = ValeurAleatoireListe(Liste);
             CASES.push(Num);
-            // console.log(Num, DATA[Num]);
-            if (DATA[Num]["Image"] === null) {
-                console.log(rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1))))
-                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y}, ${CAT})"><p class="p-grille" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;">${DATA[Num]["Mot"].toUpperCase()}</p></button>`
+            if (DATA[Num]["Image"] === null || DATA[Num]["Image"] === undefined) {
+                switch (LANGUEtoSEE) {
+                    case "fr-FR":
+                        var DataToAff = DATA[Num]["Mot"];
+                        break;
+                    case "jp-JP":
+                        if (DATA[Num]["Kanji"] !== undefined) {
+                            var DataToAff = DATA[Num]["Kanji"];
+                        } else {
+                            var DataToAff = DATA[Num]["Hiragana"];
+                        }
+                        break;
+                    default:
+                        var DataToAff = DATA[Num][LANGUEtoSEE];
+                        break;
+                            
+                }
+                // console.log(rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1))))
+                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y}, '${CAT}')"><p class="p-grille" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;">${DataToAff.toUpperCase()}</p></button>`
             } else {
-                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y}, ${CAT})"><img class="img-grille" src="${DATA[Num]["Image"]}"></img></button>`
+                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y}, '${CAT}')"><img class="img-grille" src="${DATA[Num]["Image"]}"></img></button>`
             }
         }
         Grille += "<br>";
@@ -268,19 +347,13 @@ function CreerGrille(Y, X, DATA, CAT) {
 }
 
 function adjustFontSize() {
-    const buttons = Array.from(document.getElementsByClassName('button-grille'));
-    buttons.forEach(button => {
-        const texts = Array.from(button.getElementsByClassName("p-grille"));
-        if (texts.length > 0) {
-            texts.forEach(t => {
-                let fontSize = parseInt(window.getComputedStyle(t).fontSize);
-                const padding = 1;  // Ajoutez un petit espace de 5 pixels pour que le texte soit légèrement plus petit que la case
-                while (t.scrollHeight > button.clientHeight - padding || t.scrollWidth > button.clientWidth - padding) {
-                    fontSize--;
-                    t.style.fontSize = fontSize + "px";
-                }
-            });
-        }
+    textFit(document.querySelectorAll(".p-grille"), { 
+        alignHoriz: true, 
+        alignVert: true, 
+        multiLine: true,
+        detectMultiLine: false,
+        maxFontSize: 20,
+        minFontSize: 6
     });
 }
 
@@ -297,23 +370,44 @@ function IfIsntUndefined(VAL) {
 }
 
 function Click(NB, NUM, X, Y, CAT) {
+    // console.log(CAT);
     if (NUM == PLAY) {
         // console.log("fiuuu");
         let as = document.getElementById(String(NB));
         document.getElementById('wtf').innerHTML = DICORETURN["Mots"][PLAY]["Mot"] + "<br>" + DICORETURN["Mots"][PLAY]["Hiragana"] + IfIsntUndefined(DICORETURN["Mots"][PLAY]["Kanji"]);
         as.style.visibility = "hidden";
-        console.log(CASES);
         SupprimerValeurListe(CASES, String(NUM));
-        console.log(CASES);
         if (CASES.length >= 1) {
             PLAY = ValeurAleatoireListe(CASES);
             // console.log(CASES, PLAY)
-            SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+            switch (LANGUEtoTEACH) {
+                case "fr-FR":
+                    SpeakTextF(DICORETURN["Mots"][PLAY]["Mot"]);
+                    break;
+                case "jp-JP":
+                    SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+                    break;
+                default:
+                    SpeakTextF(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
+                    break;
+                        
+            }
             /*document.getElementById('son-h').onclick = function () {
                 SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
             };*/
             document.getElementById('son-f').onclick = function () {
-                SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+                switch (LANGUEtoTEACH) {
+                    case "fr-FR":
+                        SpeakTextF(DICORETURN["Mots"][PLAY]["Mot"]);
+                        break;
+                    case "jp-JP":
+                        SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+                        break;
+                    default:
+                        SpeakTextF(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
+                        break;
+                            
+                }
             };
         } else {
             alert("Fini");
@@ -323,19 +417,35 @@ function Click(NB, NUM, X, Y, CAT) {
         for (let i = 1; i < X * Y + 1; i++) {
             let as = document.getElementById(String(i));
             if (as.style.visibility === "hidden") {
-                console.log(CASES, ValeurAleatoireDico(DICORETURN["Mots"]))
+                // console.log(CASES, ValeurAleatoireDico(DICORETURN["Mots"]))
+                switch (LANGUEtoTEACH) {
+                    case "fr-FR":
+                        var Temp = "Mot";
+                        break;
+                    case "jp-JP":
+                        var Temp = "Hiragana";
+                        break;
+                    default:
+                        var Temp = LANGUEtoTEACH;
+                        break;
+                }
                 if (CAT === "all") {
-                    var cas = ValeurAleatoireDico(DICORETURN["Mots"]);
+                    var cas = ValeurAleatoireDico(Object.entries(DICORETURN["Mots"])
+                    .filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null).reduce((acc, [key, value]) => {
+                        acc[key] = value;
+                        return acc;
+                    }, {}));
                 } else {
-                    var cas = ValeurAleatoireDico(Object.fromEntries(Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value["Catégorie"] === parseInt(CAT))));
+                    var cas = ValeurAleatoireDico(Object.fromEntries(Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value["Catégorie"] === parseInt(CAT) && value[Temp] !== undefined && value[Temp] !== null)));
                 }
                 CASES.push(cas);
                 as.onclick = function () {
                     Click(i, cas, X, Y, CAT);
                 }
-                let y = Math.floor(i / Y) + 1;
-                let x = i % Y;
-                if (DICORETURN["Mots"][cas]["Image"] === null) {
+                let y = Math.floor(i / Y);
+                let x = i % Y - 1;
+                // console.log(x, y)
+                if (DICORETURN["Mots"][cas]["Image"] === null || DICORETURN["Mots"][cas]["Image"] === undefined) {
                     as.innerHTML = `<p style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;" class="p-grille">${DICORETURN["Mots"][cas]["Mot"].toUpperCase()}</p>`;
                 } else {
                     as.innerHTML = `<img style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;" class="img-grille" src="${DICORETURN["Mots"][cas]["Image"]}"></img>`;
@@ -348,9 +458,14 @@ function Click(NB, NUM, X, Y, CAT) {
 }
 
 function Launch() {
+    var selectedOption = document.getElementById("language2").value;
+    localStorage.setItem('LangT', selectedOption);
+    LANGUEtoTEACH = selectedOption
+    DICOLANGtoTEACH = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === selectedOption)[0][1];
     X = document.getElementById("number-x").value;
     Y = document.getElementById("number-y").value;
-    CAT = document.getElementById("catégorie").value;
+    let CAT = String(document.getElementById("catégorie").value);
+    // console.log(CAT);
     document.getElementById('container').innerHTML = CreerGrille(X, Y, DICORETURN["Mots"], CAT);
     PLAY = ValeurAleatoireListe(CASES);
     document.getElementById('wtf').innerHTML = "";
@@ -362,14 +477,27 @@ function Launch() {
         SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
     };
     */
-    document.getElementById('son-f').onclick = function () {
-        SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+   document.getElementById('son-f').onclick = function () {
+        console.log(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], LANGUEtoTEACH)
+        switch (LANGUEtoTEACH) {
+            case "fr-FR":
+                SpeakTextF(DICORETURN["Mots"][PLAY]["Mot"]);
+                break;
+            case "jp-JP":
+                SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+                break;
+            default:
+                SpeakTextF(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
+                break;
+                    
+        }
     };
+    adjustFontSize();
 }
 
 function ModifLang() {
     var selectedOption = document.getElementById("language").value;
-    localStorage.setItem('Lang', selectedOption);
+    localStorage.setItem('LangS', selectedOption);
     location.reload();
 
 }
@@ -385,21 +513,36 @@ async function general() {
         Y = Math.floor((window.innerHeight) / 75) + 1;
     }
     var Temp = "";
+    var Temp2 = "";
     Object.keys(DICORETURN["Langue"]).forEach(lang => {
         lang = DICORETURN["Langue"][lang];
-        if (lang["Langue"] === LANGUE) {
-            DICOLANG = lang;
+        if (lang["Langue"] === LANGUEtoSEE && lang["Langue"] === LANGUEtoTEACH) {
+            DICOLANGtoSEE = lang;
+            DICOLANGtoTEACH = lang;
             Temp += `<option selected value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+            Temp2 += `<option selected value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+        } else if (lang["Langue"] === LANGUEtoSEE) {
+            DICOLANGtoSEE = lang;
+            Temp += `<option selected value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+            Temp2 += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+        } else if (lang["Langue"] === LANGUEtoTEACH) {
+            DICOLANGtoTEACH = lang;
+            Temp += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+            Temp2 += `<option selected value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
         } else {
             Temp += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+            Temp2 += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
         }
     })
-    var Text = `<button onclick="Launch()">${DICOLANG["Play"]}</button><div><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}">`;
+    var Text = `<button onclick="Launch()">${DICOLANGtoSEE["Play"]}</button><div><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}">`;
     Temp = `<select id="catégorie" name="catégorie"><option value="all">TOUT</option>`;
     Object.keys(DICORETURN["Catégorie"]).forEach(cat => {
-        cati = DICORETURN["Catégorie"][cat];
-        Temp += `<option value="${cat}">${cati["Nom"]}</option>`;
+        let cati = DICORETURN["Catégorie"][cat];
+        // console.log(cat);
+        Temp += `<option value="${cat}">${cati[localStorage.getItem("LangS")]}</option>`;
     })
     document.getElementById("container").innerHTML = Text + Temp + "</select>";
-    adjustFontSize;
+    let obj = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1];
+    document.getElementById("modifier").innerHTML = obj["Modify"];
+    document.getElementById("language-button").innerHTML = obj["Language"];
 }

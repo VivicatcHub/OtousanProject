@@ -15,7 +15,7 @@ async function GeneralTest() {
     }
     Object.keys(DICORETURN["Mots"]).forEach(Num => {
         var DATA = DICORETURN["Mots"];
-        if (DATA[Num]["Image"] === null) {
+        if (DATA[Num]["Image"] === null || DATA[Num]["Image"] === undefined) {
             Test += `<button class="button-grille"><p class="p-grille">${DATA[Num]["Mot"].toUpperCase()}</p></button>`
         } else {
             Test += `<button class="button-grille"><img class="img-grille" src="${DATA[Num]["Image"]}"></img></button>`
@@ -23,5 +23,6 @@ async function GeneralTest() {
     })
     Test += "</div>";
     document.getElementById('container').innerHTML = Test;
+    document.getElementById("modifier").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("Lang"))[0][1]["Modify"];
     adjustFontSize();
 }

@@ -14,7 +14,7 @@
         <a href="Imagier/" class="box">
             <img src="https://3.bp.blogspot.com/--qn4_aEFfpc/Uw-flDqcwoI/AAAAAAAADkU/dN5Yv5p03lM/s1600/imagier+1.png"
                 alt="Imagier">
-            <div class="name">Imagier</div>
+            <div class="name" id="Imagier">Imagier</div>
         </a>
         <a href="Test/" class="box">
             <img src="https://th.bing.com/th/id/OIP.dmFG8cHtySaVAp9evFw_HwHaEF?w=336&h=185&c=7&r=0&o=5&pid=1.7"
@@ -22,6 +22,17 @@
             <div class="name">Test</div>
         </a>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/textfit/2.4.0/textFit.js"></script>
+    <script src="Data.js"></script>
+    <script src="Imagier/Script.js"></script>
+    <script>
+        async function GeneralIndex() {
+            DICORETURN = await DatasVictory(DATAS_RANGE);
+            document.getElementById("Imagier").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Imagier"];
+        }
+
+        GeneralIndex();
+    </script>
 </body>
 
 </html>
