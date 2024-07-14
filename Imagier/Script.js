@@ -249,6 +249,7 @@ function SameWord(KEY, RESULT) {
 function CreerListe(X, Y, DATA, CAT) {
     var Result = [];
     let Nb = (X * Y) / 2;
+    let Rep = parseInt(document.getElementById("rep").value);
     switch (LANGUEtoTEACH) {
         case "fr-FR":
             var Temp = "Mot";
@@ -260,18 +261,29 @@ function CreerListe(X, Y, DATA, CAT) {
             var Temp = LANGUEtoTEACH;
             break;
     }
+    switch (LANGUEtoSEE) {
+        case "fr-FR":
+            var Temp2 = "Mot";
+            break;
+        case "jp-JP":
+            var Temp2 = "Hiragana";
+            break;
+        default:
+            var Temp2 = LANGUEtoSEE;
+            break;
+    }
     if (CAT === "all") {
         var TempData = Object.entries(DATA)
-        .filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null).reduce((acc, [key, value]) => {
+        .filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null).reduce((acc, [key, value]) => {
             acc[key] = value;
             return acc;
         }, {});
     } else {
-        var TempData = Object.fromEntries(Object.entries(DATA).filter(([key, value]) => value["Catégorie"] === parseInt(CAT) && value[Temp] !== undefined && value[Temp] !== null));
+        var TempData = Object.fromEntries(Object.entries(DATA).filter(([key, value]) => value["Catégorie"] === parseInt(CAT) && value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null));
     }
     let Len = Object.keys(TempData).length;
-    console.log(TempData)
-    for (let i = 0; i < Math.min(Nb, Len); i++) {
+    // console.log(Nb, Len, Rep)
+    for (let i = 0; i < Math.min(Nb, Len) / Rep; i++) {
         AleaKey = ValeurAleatoireDico(TempData);
         var cp = 0;
         while (SameVoice(AleaKey, Result) || SameWord(AleaKey, Result)) {
@@ -305,7 +317,7 @@ function interpolateColor(FACTOR) {
 
 function CreerGrille(Y, X, DATA, CAT) {
     let Liste = CreerListe(X, Y, DATA, CAT);
-    // console.log(DATA);
+    // console.log(Liste);
     if (window.innerWidth < 1000) {
         var Grille = `<div style='width: ${Y * 75}px;' class='grille'>`;
     } else {
@@ -320,22 +332,22 @@ function CreerGrille(Y, X, DATA, CAT) {
             if (DATA[Num]["Image"] === null || DATA[Num]["Image"] === undefined) {
                 switch (LANGUEtoSEE) {
                     case "fr-FR":
-                        var DataToAff = DATA[Num]["Mot"];
+                        var DataToAff = "Mot";
                         break;
                     case "jp-JP":
                         if (DATA[Num]["Kanji"] !== undefined) {
-                            var DataToAff = DATA[Num]["Kanji"];
+                            var DataToAff = "Kanji";
                         } else {
-                            var DataToAff = DATA[Num]["Hiragana"];
+                            var DataToAff = "Hiragana";
                         }
                         break;
                     default:
-                        var DataToAff = DATA[Num][LANGUEtoSEE];
+                        var DataToAff = LANGUEtoSEE;
                         break;
                             
                 }
                 // console.log(rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1))))
-                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y}, '${CAT}')"><p class="p-grille" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;">${DataToAff.toUpperCase()}</p></button>`
+                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y}, '${CAT}')"><p class="p-grille" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;">${DATA[Num][DataToAff].toUpperCase()}</p></button>`
             } else {
                 Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y}, '${CAT}')"><img class="img-grille" src="${DATA[Num]["Image"]}"></img></button>`
             }
@@ -373,8 +385,19 @@ function Click(NB, NUM, X, Y, CAT) {
     // console.log(CAT);
     if (NUM == PLAY) {
         // console.log("fiuuu");
+        switch (LANGUEtoTEACH) {
+            case "jp-JP":
+                var Temp = DICORETURN["Mots"][PLAY]["Hiragana"] + IfIsntUndefined(DICORETURN["Mots"][PLAY]["Kanji"]);
+                break;
+            case "fr-FR":
+                var Temp = DICORETURN["Mots"][PLAY]["Mot"];
+                break;
+            default:
+                var Temp = DICORETURN["Mots"][PLAY][LANGUEtoTEACH];
+                break;
+        }
         let as = document.getElementById(String(NB));
-        document.getElementById('wtf').innerHTML = DICORETURN["Mots"][PLAY]["Mot"] + "<br>" + DICORETURN["Mots"][PLAY]["Hiragana"] + IfIsntUndefined(DICORETURN["Mots"][PLAY]["Kanji"]);
+        document.getElementById('wtf').innerHTML = DICORETURN["Mots"][PLAY]["Mot"] + (LANGUEtoSEE !== LANGUEtoTEACH ? "<br>" + Temp : "");
         as.style.visibility = "hidden";
         SupprimerValeurListe(CASES, String(NUM));
         if (CASES.length >= 1) {
@@ -429,24 +452,40 @@ function Click(NB, NUM, X, Y, CAT) {
                         var Temp = LANGUEtoTEACH;
                         break;
                 }
+                switch (LANGUEtoSEE) {
+                    case "fr-FR":
+                        var DataToAff = "Mot";
+                        break;
+                    case "jp-JP":
+                        if (DATA[Num]["Kanji"] !== undefined) {
+                            var DataToAff = "Kanji";
+                        } else {
+                            var DataToAff = "Hiragana";
+                        }
+                        break;
+                    default:
+                        var DataToAff = LANGUEtoSEE;
+                        break;
+                            
+                }
                 if (CAT === "all") {
                     var cas = ValeurAleatoireDico(Object.entries(DICORETURN["Mots"])
-                    .filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null).reduce((acc, [key, value]) => {
+                    .filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[DataToAff] !== undefined && value[DataToAff] !== null).reduce((acc, [key, value]) => {
                         acc[key] = value;
                         return acc;
                     }, {}));
                 } else {
-                    var cas = ValeurAleatoireDico(Object.fromEntries(Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value["Catégorie"] === parseInt(CAT) && value[Temp] !== undefined && value[Temp] !== null)));
+                    var cas = ValeurAleatoireDico(Object.fromEntries(Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value["Catégorie"] === parseInt(CAT) && value[Temp] !== undefined && value[Temp] !== null && value[DataToAff] !== undefined && value[DataToAff] !== null)));
                 }
                 CASES.push(cas);
                 as.onclick = function () {
                     Click(i, cas, X, Y, CAT);
                 }
-                let y = Math.floor(i / Y);
-                let x = i % Y - 1;
-                // console.log(x, y)
+                let x = Math.floor(i / Y);
+                let y = i % Y - 1;
+                console.log(x, y)
                 if (DICORETURN["Mots"][cas]["Image"] === null || DICORETURN["Mots"][cas]["Image"] === undefined) {
-                    as.innerHTML = `<p style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;" class="p-grille">${DICORETURN["Mots"][cas]["Mot"].toUpperCase()}</p>`;
+                    as.innerHTML = `<p style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;" class="p-grille">${DICORETURN["Mots"][cas][DataToAff].toUpperCase()}</p>`;
                 } else {
                     as.innerHTML = `<img style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;" class="img-grille" src="${DICORETURN["Mots"][cas]["Image"]}"></img>`;
                 }
@@ -454,10 +493,12 @@ function Click(NB, NUM, X, Y, CAT) {
                 break;
             }
         }
+        adjustFontSize;
     }
 }
 
 function Launch() {
+    document.getElementById("container").classList = "cont"
     var selectedOption = document.getElementById("language2").value;
     localStorage.setItem('LangT', selectedOption);
     LANGUEtoTEACH = selectedOption
@@ -534,14 +575,14 @@ async function general() {
             Temp2 += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
         }
     })
-    var Text = `<button onclick="Launch()">${DICOLANGtoSEE["Play"]}</button><div><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}">`;
+    var Text = `<button class="jouer" onclick="Launch()">${DICOLANGtoSEE["Play"]}</button><div class="form-group"><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}"><div class="form-group"><select id="rep" name="rep"><option value="1">Faible</option><option value="5">Moyen</option><option value="10">Fort</option></select>`;
     Temp = `<select id="catégorie" name="catégorie"><option value="all">TOUT</option>`;
     Object.keys(DICORETURN["Catégorie"]).forEach(cat => {
         let cati = DICORETURN["Catégorie"][cat];
         // console.log(cat);
         Temp += `<option value="${cat}">${cati[localStorage.getItem("LangS")]}</option>`;
     })
-    document.getElementById("container").innerHTML = Text + Temp + "</select>";
+    document.getElementById("container").innerHTML = Text + Temp + "</select></div>";
     let obj = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1];
     document.getElementById("modifier").innerHTML = obj["Modify"];
     document.getElementById("language-button").innerHTML = obj["Language"];
