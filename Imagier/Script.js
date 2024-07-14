@@ -415,9 +415,20 @@ function Click(NB, NUM, X, Y, CAT) {
                     break;
                         
             }
-            /*document.getElementById('son-h').onclick = function () {
-                SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
-            };*/
+            document.getElementById('son-h').onclick = function () {
+                switch (LANGUEtoTEACH) {
+                    case "fr-FR":
+                        SpeakTextH(DICORETURN["Mots"][PLAY]["Mot"]);
+                        break;
+                    case "jp-JP":
+                        SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
+                        break;
+                    default:
+                        SpeakTextH(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
+                        break;
+                            
+                }
+            };
             document.getElementById('son-f').onclick = function () {
                 switch (LANGUEtoTEACH) {
                     case "fr-FR":
@@ -509,15 +520,23 @@ function Launch() {
     // console.log(CAT);
     document.getElementById('container').innerHTML = CreerGrille(X, Y, DICORETURN["Mots"], CAT);
     PLAY = ValeurAleatoireListe(CASES);
-    document.getElementById('wtf').innerHTML = "";
-    document.getElementById("audio").innerHTML = `<button id="son-f"><img src="../speaker_f.png" alt="JOUER"></img></button>`;
-    // <button id="son-h"><img src="../speaker_h.png" alt="JOUER"></img></button>
-    /*
+    document.getElementById("containerD").innerHTML = `<button id="son-f"><img src="../speaker_f.png" alt="JOUER"></img></button><p id="wtf"></p><button id="son-h"><img src="../speaker_h.png" alt="JOUER"></img></button>`;
     SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
     document.getElementById('son-h').onclick = function () {
-        SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
+        console.log(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], LANGUEtoTEACH)
+        switch (LANGUEtoTEACH) {
+            case "fr-FR":
+                SpeakTextH(DICORETURN["Mots"][PLAY]["Mot"]);
+                break;
+            case "jp-JP":
+                SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
+                break;
+            default:
+                SpeakTextH(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
+                break;
+                    
+        }
     };
-    */
    document.getElementById('son-f').onclick = function () {
         console.log(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], LANGUEtoTEACH)
         switch (LANGUEtoTEACH) {
