@@ -3,127 +3,182 @@
     margin: 0;
 }
 
+body {
+    display: grid;
+    align-items: center;
+    height: 100vh;
+}
+
 .containerG {
     display: flex;
     align-items: center;
-    justify-content: center; /* Centre horizontalement */
+    justify-content: center;
+    /* Centre horizontalement */
     /*height: 100vh; /* Prend toute la hauteur de la fenêtre */
 }
 
 /* Style pour ContainerD */
 .containerD {
     display: flex;
-    flex-direction: column; /* Met les éléments en colonne */
-    align-items: center; /* Centre les éléments horizontalement */
+    flex-direction: column;
+    /* Met les éléments en colonne */
+    align-items: center;
+    /* Centre les éléments horizontalement */
     padding: 10px;
     background-color: #f9f9f9;
     border: 1px solid #ccc;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 300px; /* Largeur maximale du container */
-    margin: 0 auto; /* Centre le container sur la page */
+    max-width: 300px;
+    /* Largeur maximale du container */
+    margin: 0 auto;
+    /* Centre le container sur la page */
 }
 
 /* Style pour l'image */
 .containerD img {
-    width: 50px; /* Taille de l'image */
+    width: 50px;
+    /* Taille de l'image */
     height: auto;
     margin-bottom: 20px;
 }
 
 /* Style pour le paragraphe */
 .containerD p {
-    text-align: center; /* Centre le texte */
-    margin: 0 0 20px 0; /* Espace en bas du texte */
-    color: #333; /* Couleur du texte */
+    text-align: center;
+    /* Centre le texte */
+    margin: 0 0 20px 0;
+    /* Espace en bas du texte */
+    color: #333;
+    /* Couleur du texte */
     font-family: Arial, sans-serif;
-    border: 1px solid #ccc; /* Bordure autour du texte */
+    border: 1px solid #ccc;
+    /* Bordure autour du texte */
     padding: 10px;
-    border-radius: 5px; /* Bordures arrondies */
-    background-color: #fff; /* Couleur de fond de la "case" */
+    border-radius: 5px;
+    /* Bordures arrondies */
+    background-color: #fff;
+    /* Couleur de fond de la "case" */
 }
 
 /* Style pour les boutons */
 .containerD button {
-    width: 100px; /* Largeur des boutons */
+    width: 100px;
+    /* Largeur des boutons */
     padding: 10px;
-    margin: 5px 0; /* Espace entre les boutons */
-    border: none; /* Enlève les bordures par défaut */
+    margin: 5px 0;
+    /* Espace entre les boutons */
+    border: none;
+    /* Enlève les bordures par défaut */
     border-radius: 5px;
-    background-color: #007BFF; /* Couleur de fond */
-    color: white; /* Couleur du texte */
+    background-color: #007BFF;
+    /* Couleur de fond */
+    color: white;
+    /* Couleur du texte */
     font-family: Arial, sans-serif;
-    cursor: pointer; /* Change le curseur en main */
-    transition: background-color 0.3s; /* Animation pour le changement de couleur */
+    cursor: pointer;
+    /* Change le curseur en main */
+    transition: background-color 0.3s;
+    /* Animation pour le changement de couleur */
 }
 
 .containerD button:hover {
-    background-color: #0056b3; /* Couleur de fond au survol */
+    background-color: #0056b3;
+    /* Couleur de fond au survol */
 }
 
 /* Style pour .container */
 .container {
     display: flex;
-    flex-direction: row; /* Par défaut, les éléments sont en ligne */
-    justify-content: space-around; /* Espacement entre les éléments */
-    align-items: center; /* Centre les éléments verticalement */
+    flex-direction: column;
+    /* Change la direction en colonne */
+    /* Centre les éléments horizontalement */
+    justify-content: space-around;
+    /* Espacement entre les éléments */
+    align-items: center;
+    justify-self: center;
+    /* Centre les éléments verticalement */
     padding: 10px;
     background-color: #f9f9f9;
     border: 1px solid #ccc;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 80%; /* Utilise toute la largeur disponible */
-    margin: 0 auto; /* Centre le container sur la page */
+    max-width: 80%;
+    /* Utilise toute la largeur disponible */
+    margin: 0 auto;
+    /* Centre le container sur la page */
 }
 
 /* Style pour le bouton JOUER */
 .container button.jouer {
-    width: 150px; /* Largeur du bouton JOUER */
+    width: 150px;
+    /* Largeur du bouton JOUER */
     padding: 10px;
-    margin: 10px 0; /* Espace autour du bouton */
-    border: none; /* Enlève les bordures par défaut */
+    margin: 10px 0;
+    /* Espace autour du bouton */
+    border: none;
+    /* Enlève les bordures par défaut */
     border-radius: 5px;
-    background-color: #28a745; /* Couleur de fond */
-    color: white; /* Couleur du texte */
+    background-color: #28a745;
+    /* Couleur de fond */
+    color: white;
+    /* Couleur du texte */
     font-family: Arial, sans-serif;
-    cursor: pointer; /* Change le curseur en main */
-    transition: background-color 0.3s; /* Animation pour le changement de couleur */
+    cursor: pointer;
+    /* Change le curseur en main */
+    transition: background-color 0.3s;
+    /* Animation pour le changement de couleur */
 }
 
 .container button.jouer:hover {
-    background-color: #218838; /* Couleur de fond au survol */
+    background-color: #218838;
+    /* Couleur de fond au survol */
 }
 
 /* Style pour les div contenant les <select> et <input> */
 .container .form-group {
     display: flex;
-    flex-direction: row; /* Par défaut, les éléments sont en ligne */
+    flex-direction: row;
+    /* Par défaut, les éléments sont en ligne */
     align-items: center;
-    margin: 10px 0; /* Espace autour de chaque groupe de formulaire */
+    margin: 10px 0;
+    /* Espace autour de chaque groupe de formulaire */
 }
 
 /* Style pour les <select> */
 .container select {
     padding: 8px;
-    margin: 5px; /* Espace autour des select */
-    border: 1px solid #ccc; /* Bordure des select */
-    border-radius: 5px; /* Bordures arrondies */
+    margin: 5px;
+    /* Espace autour des select */
+    border: 1px solid #ccc;
+    /* Bordure des select */
+    border-radius: 5px;
+    /* Bordures arrondies */
     font-family: Arial, sans-serif;
-    font-size: 14px; /* Taille de la police */
-    background-color: #fff; /* Couleur de fond */
-    cursor: pointer; /* Change le curseur en main */
+    font-size: 14px;
+    /* Taille de la police */
+    background-color: #fff;
+    /* Couleur de fond */
+    cursor: pointer;
+    /* Change le curseur en main */
 }
 
 /* Style pour les <input> de type nombre */
 .container input[type="number"] {
-    width: 130px; /* Largeur des input */
+    width: 130px;
+    /* Largeur des input */
     padding: 8px;
-    margin: 5px; /* Espace autour des input */
-    border: 1px solid #ccc; /* Bordure des input */
-    border-radius: 5px; /* Bordures arrondies */
+    margin: 5px;
+    /* Espace autour des input */
+    border: 1px solid #ccc;
+    /* Bordure des input */
+    border-radius: 5px;
+    /* Bordures arrondies */
     font-family: Arial, sans-serif;
-    font-size: 14px; /* Taille de la police */
-    background-color: #fff; /* Couleur de fond */
+    font-size: 14px;
+    /* Taille de la police */
+    background-color: #fff;
+    /* Couleur de fond */
 }
 
 .grille {
@@ -171,6 +226,26 @@
     text-align: center;
 }
 
+input[type="text"] {
+    text-align: center;
+    width: 30px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 1em;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background-color: #ffffff;
+    color: #333;
+}
+
+input[type="text"]:focus {
+    border-color: #007BFF;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+
 @media (max-width: 1000px) {
     .button-grille {
         width: 75px;
@@ -192,27 +267,35 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center; /* Centre verticalement et horizontalement */
+        justify-content: center;
+        /* Centre verticalement et horizontalement */
     }
 
     .containerD {
-        flex-direction: row; /* Change la direction en ligne */
-        justify-content: space-around; /* Espacement entre les éléments */
-        max-width: 100%; /* Utilise toute la largeur disponible */
+        flex-direction: row;
+        /* Change la direction en ligne */
+        justify-content: space-around;
+        /* Espacement entre les éléments */
+        max-width: 100%;
+        /* Utilise toute la largeur disponible */
     }
 
     .container {
-        flex-direction: column; /* Change la direction en colonne */
-        align-items: center; /* Centre les éléments horizontalement */
+        flex-direction: column;
+        /* Change la direction en colonne */
+        align-items: center;
+        /* Centre les éléments horizontalement */
     }
 
     .container .form-group {
-        flex-direction: column; /* Assure que les form-group restent en colonne */
+        flex-direction: column;
+        /* Assure que les form-group restent en colonne */
         align-items: center;
     }
 
     .container .form-group select {
-        width: 80%; /* Largeur adaptée pour s'adapter à l'espace */
+        width: 80%;
+        /* Largeur adaptée pour s'adapter à l'espace */
     }
 
     .container input[type="number"] {
@@ -221,29 +304,30 @@
 }
 
 @keyframes Animation {
-	0%,
-	100% {
-		transform: translateX(0);
-	}
 
-	10%,
-	30%,
-	50%,
-	70% {
-		transform: translateX(-5px);
-	}
+    0%,
+    100% {
+        transform: translateX(0);
+    }
 
-	20%,
-	40%,
-	60% {
-		transform: translateX(5px);
-	}
+    10%,
+    30%,
+    50%,
+    70% {
+        transform: translateX(-5px);
+    }
 
-	80% {
-		transform: translateX(3px);
-	}
+    20%,
+    40%,
+    60% {
+        transform: translateX(5px);
+    }
 
-	90% {
-		transform: translateX(-3px);
-	}
+    80% {
+        transform: translateX(3px);
+    }
+
+    90% {
+        transform: translateX(-3px);
+    }
 }

@@ -16,6 +16,31 @@ if (LANGUEtoTEACH === null) {
     LANGUEtoTEACH = "jp-JP";
     localStorage.setItem('LangT', LANGUEtoTEACH);
 }
+var DIFF = localStorage.getItem('Diff');
+if (DIFF === null) {
+    DIFF = "1";
+    localStorage.setItem('Diff', DIFF);
+}
+var CATEG = localStorage.getItem('Cat');
+if (CATEG === null) {
+    CATEG = "all";
+    localStorage.setItem('Cat', CATEG);
+}
+var VOICE = localStorage.getItem('Voice');
+if (VOICE === null) {
+    VOICE = "son-f";
+    localStorage.setItem('Voice', VOICE);
+}
+var detectedKey = localStorage.getItem('Key1');
+if (detectedKey === null) {
+    detectedKey = "S";
+    localStorage.setItem('Key1', detectedKey);
+}
+var detectedKey2 = localStorage.getItem('Key2');
+if (detectedKey2 === null) {
+    detectedKey2 = "D";
+    localStorage.setItem('Key2', detectedKey2);
+}
 var DICOLANGtoSEE = {};
 var DICOLANGtoTEACH = {};
 var SCORE = 0;
@@ -251,6 +276,7 @@ function CreerListe(X, Y, DATA, CAT) {
     var Result = [];
     let Nb = (X * Y) / 2;
     let Rep = parseInt(document.getElementById("rep").value);
+    localStorage.setItem("Diff", Rep);
     switch (LANGUEtoTEACH) {
         case "fr-FR":
             var Temp = "Mot";
@@ -275,10 +301,10 @@ function CreerListe(X, Y, DATA, CAT) {
     }
     if (CAT === "all") {
         var TempData = Object.entries(DATA)
-        .filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null).reduce((acc, [key, value]) => {
-            acc[key] = value;
-            return acc;
-        }, {});
+            .filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null).reduce((acc, [key, value]) => {
+                acc[key] = value;
+                return acc;
+            }, {});
     } else {
         var TempData = Object.fromEntries(Object.entries(DATA).filter(([key, value]) => value["Catégorie"] === parseInt(CAT) && value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null));
     }
@@ -345,7 +371,7 @@ function CreerGrille(Y, X, DATA, CAT) {
                     default:
                         var DataToAff = LANGUEtoSEE;
                         break;
-                            
+
                 }
                 // console.log(rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1))))
                 Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y}, '${CAT}')"><p class="p-grille" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;">${DATA[Num][DataToAff].toUpperCase()}</p></button>`
@@ -360,9 +386,9 @@ function CreerGrille(Y, X, DATA, CAT) {
 }
 
 function adjustFontSize() {
-    textFit(document.querySelectorAll(".p-grille"), { 
-        alignHoriz: true, 
-        alignVert: true, 
+    textFit(document.querySelectorAll(".p-grille"), {
+        alignHoriz: true,
+        alignVert: true,
         multiLine: true,
         detectMultiLine: false,
         maxFontSize: 20,
@@ -406,15 +432,27 @@ function Click(NB, NUM, X, Y, CAT) {
             // console.log(CASES, PLAY)
             switch (LANGUEtoTEACH) {
                 case "fr-FR":
-                    SpeakTextF(DICORETURN["Mots"][PLAY]["Mot"]);
+                    if (VOICE === "son-f") {
+                        SpeakTextF(DICORETURN["Mots"][PLAY]["Mot"]);
+                    } else {
+                        SpeakTextH(DICORETURN["Mots"][PLAY]["Mot"]);
+                    }
                     break;
                 case "jp-JP":
-                    SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+                    if (VOICE === "son-f") {
+                        SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+                    } else {
+                        SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
+                    }
                     break;
                 default:
-                    SpeakTextF(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
+                    if (VOICE === "son-f") {
+                        SpeakTextF(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
+                    } else {
+                        SpeakTextH(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
+                    }
                     break;
-                        
+
             }
             document.getElementById('son-h').onclick = function () {
                 switch (LANGUEtoTEACH) {
@@ -427,7 +465,7 @@ function Click(NB, NUM, X, Y, CAT) {
                     default:
                         SpeakTextH(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
                         break;
-                            
+
                 }
             };
             document.getElementById('son-f').onclick = function () {
@@ -441,12 +479,24 @@ function Click(NB, NUM, X, Y, CAT) {
                     default:
                         SpeakTextF(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
                         break;
-                            
+
                 }
             };
         } else {
+            switch (LANGUEtoSEE) {
+                case "jp-JP":
+                    var Temp = "1";
+                    break;
+                case "fr-FR":
+                    var Temp = "2";
+                    break;
+                default:
+                    var Temp = "0";
+                    break;
+            }
             document.getElementById("audioFin").play();
-            alert(`Bravo tu as terminé avec seulement ${SCORE} erreurs`);
+            var Text = DICORETURN["Langue"][Temp]["Fin"].replace('$', `${SCORE}`)
+            alert(Text);
         }
     } else {
         SCORE++;
@@ -484,14 +534,14 @@ function Click(NB, NUM, X, Y, CAT) {
                     default:
                         var DataToAff = LANGUEtoSEE;
                         break;
-                            
+
                 }
                 if (CAT === "all") {
                     var cas = ValeurAleatoireDico(Object.entries(DICORETURN["Mots"])
-                    .filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[DataToAff] !== undefined && value[DataToAff] !== null).reduce((acc, [key, value]) => {
-                        acc[key] = value;
-                        return acc;
-                    }, {}));
+                        .filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[DataToAff] !== undefined && value[DataToAff] !== null).reduce((acc, [key, value]) => {
+                            acc[key] = value;
+                            return acc;
+                        }, {}));
                 } else {
                     var cas = ValeurAleatoireDico(Object.fromEntries(Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value["Catégorie"] === parseInt(CAT) && value[Temp] !== undefined && value[Temp] !== null && value[DataToAff] !== undefined && value[DataToAff] !== null)));
                 }
@@ -515,22 +565,29 @@ function Click(NB, NUM, X, Y, CAT) {
     }
 }
 
+function Retry() {
+    location.reload();
+    general;
+}
+
 function Launch() {
-    document.getElementById("container").classList = "cont"
+    VOICE = document.getElementById("voice").value;
+    localStorage.setItem("Voice", VOICE);
+    document.getElementById("container").classList = "cont";
     var selectedOption = document.getElementById("language2").value;
     localStorage.setItem('LangT', selectedOption);
-    LANGUEtoTEACH = selectedOption
+    LANGUEtoTEACH = selectedOption;
     DICOLANGtoTEACH = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === selectedOption)[0][1];
     X = document.getElementById("number-x").value;
     Y = document.getElementById("number-y").value;
     let CAT = String(document.getElementById("catégorie").value);
+    localStorage.setItem("Cat", CAT);
     // console.log(CAT);
     document.getElementById('container').innerHTML = CreerGrille(X, Y, DICORETURN["Mots"], CAT);
     PLAY = ValeurAleatoireListe(CASES);
-    document.getElementById("containerD").innerHTML = `<button id="son-f"><img src="../speaker_f.png" alt="JOUER"></img></button><p id="wtf"></p><button id="son-h"><img src="../speaker_h.png" alt="JOUER"></img></button>`;
-    SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+    document.getElementById("containerD").innerHTML = `<button id="son-f"><img src="../speaker_f.png" alt="JOUER"></img></button><p id="wtf"></p><button id="son-h"><img src="../speaker_h.png" alt="JOUER"></img></button><button id="retry" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
     document.getElementById('son-h').onclick = function () {
-        console.log(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], LANGUEtoTEACH)
+        // console.log(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], LANGUEtoTEACH)
         switch (LANGUEtoTEACH) {
             case "fr-FR":
                 SpeakTextH(DICORETURN["Mots"][PLAY]["Mot"]);
@@ -541,11 +598,11 @@ function Launch() {
             default:
                 SpeakTextH(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
                 break;
-                    
+
         }
     };
-   document.getElementById('son-f').onclick = function () {
-        console.log(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], LANGUEtoTEACH)
+    document.getElementById('son-f').onclick = function () {
+        // console.log(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], LANGUEtoTEACH)
         switch (LANGUEtoTEACH) {
             case "fr-FR":
                 SpeakTextF(DICORETURN["Mots"][PLAY]["Mot"]);
@@ -556,9 +613,10 @@ function Launch() {
             default:
                 SpeakTextF(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
                 break;
-                    
+
         }
     };
+    document.getElementById("container2").remove();
     adjustFontSize();
 }
 
@@ -568,11 +626,33 @@ function ModifLang() {
     location.reload();
 }
 
-document.addEventListener('keydown', function(event) {
-    if (event.key === 's') {
-        document.getElementById("son-f").click();
+document.addEventListener('keydown', function (event) {
+    try {
+        if (event.key === detectedKey) {
+            document.getElementById("son-f").click();
+        } else if (event.key === detectedKey2) {
+            document.getElementById("son-h").click();
+        }
+    } catch (error) {
+        console.log(error);
     }
 });
+
+function SelectedOrNot(NUM) {
+    if (DIFF === NUM) {
+        return "selected ";
+    } else {
+        return "";
+    }
+}
+
+function SelectedOrNot2(NUM) {
+    if (VOICE === NUM) {
+        return "selected ";
+    } else {
+        return "";
+    }
+}
 
 async function general() {
     DICORETURN = await DatasVictory(DATAS_RANGE);
@@ -606,14 +686,36 @@ async function general() {
             Temp2 += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
         }
     })
-    var Text = `<button class="jouer" onclick="Launch()">${DICOLANGtoSEE["Play"]}</button><div class="form-group"><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}"><div class="form-group"><select id="rep" name="rep"><option value="1">Faible</option><option value="4">Moyen</option><option value="10">Fort</option></select>`;
-    Temp = `<select id="catégorie" name="catégorie"><option value="all">TOUT</option>`;
+    var Text = `<button class="jouer" id="jouer" onclick="Launch()">${DICOLANGtoSEE["Play"]}</button><div class="form-group"><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}"><div class="form-group"><select id="rep" name="rep"><option ${SelectedOrNot("1")}value="1">${DICOLANGtoSEE["Easy"]}</option><option ${SelectedOrNot("4")}value="4">${DICOLANGtoSEE["Medium"]}</option><option ${SelectedOrNot("10")}value="10">${DICOLANGtoSEE["Hard"]}</option></select>`;
+    Temp = `<select id="catégorie" name="catégorie"><option value="all">${DICOLANGtoSEE["All"]}</option>`;
     Object.keys(DICORETURN["Catégorie"]).forEach(cat => {
         let cati = DICORETURN["Catégorie"][cat];
         // console.log(cat);
-        Temp += `<option value="${cat}">${cati[localStorage.getItem("LangS")]}</option>`;
+        if (CATEG === cat) {
+            Temp += `<option selected value="${cat}">${cati[localStorage.getItem("LangS")]}</option>`;
+        } else {
+            Temp += `<option value="${cat}">${cati[localStorage.getItem("LangS")]}</option>`;
+        }
     })
     document.getElementById("container").innerHTML = Text + Temp + "</select></div>";
+    Temp = `<select id="voice" name="voice"><option ${SelectedOrNot2("son-f")}value="son-f">${DICOLANGtoSEE["Voice"]} 1</option><option ${SelectedOrNot2("son-h")}value="son-h">${DICOLANGtoSEE["Voice"]} 2</option></select>`;
+    if (window.innerWidth > 1000) {
+        Temp += `<input type="text" id="keyInput" value="${detectedKey}" readonly><input type="text" id="keyInput2" value="${detectedKey2}" readonly>`;
+    }
+    document.getElementById("container2").innerHTML = Temp;
     let obj = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1];
     document.getElementById("modifier").innerHTML = obj["Modify"];
+    if (window.innerWidth > 1000) {
+        document.getElementById('keyInput').addEventListener('keydown', function (event) {
+            detectedKey = event.key;
+            this.value = detectedKey.toUpperCase();
+            localStorage.setItem("Key1", detectedKey);
+        });
+    
+        document.getElementById('keyInput2').addEventListener('keydown', function (event) {
+            detectedKey2 = event.key;
+            this.value = detectedKey2.toUpperCase();
+            localStorage.setItem("Key2", detectedKey2);
+        });
+    }
 }
