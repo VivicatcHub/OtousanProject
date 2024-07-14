@@ -2,9 +2,11 @@ let GAME = 'Imagier';
 let SHEET_ID = '1Ln9YiT4H4qlrKgzI3T30SxWWLVh1xyCjzB0Ievv8scc';
 let MOT_RANGE = 'A1:G1000';
 let CAT_RANGE = 'A1:D10';
-let LAN_RANGE = 'A1:K10';
+let LAN_RANGE = 'A1:L10';
+let IMG_RANGE = 'A1:C10';
 let DATAS_RANGE = {
     "Mots": MOT_RANGE,
     "Catégorie": CAT_RANGE,
-    "Langue": LAN_RANGE
+    "Langue": LAN_RANGE,
+    "Images": IMG_RANGE
 }

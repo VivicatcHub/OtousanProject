@@ -131,9 +131,12 @@
     margin-top: 15px;
     display: flex;
     flex-wrap: wrap;
-    background-image: url("https://th.bing.com/th/id/R.336626d5c1a9de2ad8122bfaeec43aaf?rik=wiOSE01tC02CzQ&pid=ImgRaw&r=0");
     background-size: cover;
     border-radius: 0px !important;
+}
+
+.animate {
+    animation: Animation 0.5s ease 0s 1 normal forwards;
 }
 
 .button-grille {
@@ -215,4 +218,32 @@
     .container input[type="number"] {
         width: 70%;
     }
+}
+
+@keyframes Animation {
+	0%,
+	100% {
+		transform: translateX(0);
+	}
+
+	10%,
+	30%,
+	50%,
+	70% {
+		transform: translateX(-5px);
+	}
+
+	20%,
+	40%,
+	60% {
+		transform: translateX(5px);
+	}
+
+	80% {
+		transform: translateX(3px);
+	}
+
+	90% {
+		transform: translateX(-3px);
+	}
 }

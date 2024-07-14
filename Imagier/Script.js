@@ -18,6 +18,7 @@ if (LANGUEtoTEACH === null) {
 }
 var DICOLANGtoSEE = {};
 var DICOLANGtoTEACH = {};
+var SCORE = 0;
 
 async function RecupSheetDatas(ID, TITLE, RANGE) {
     try {
@@ -319,9 +320,9 @@ function CreerGrille(Y, X, DATA, CAT) {
     let Liste = CreerListe(X, Y, DATA, CAT);
     // console.log(Liste);
     if (window.innerWidth < 1000) {
-        var Grille = `<div style='width: ${Y * 75}px;' class='grille'>`;
+        var Grille = `<div style='width: ${Y * 75}px; background-image: url("${DICORETURN["Images"][ValeurAleatoireDico(Object.fromEntries(Object.entries(DICORETURN["Images"]).filter(([key, value]) => value["Type"] === "t")))]["Image"]}");' class='grille'>`;
     } else {
-        var Grille = `<div style='width: ${Y * 125}px;' class='grille'>`;
+        var Grille = `<div style='width: ${Y * 125}px; background-image: url("${DICORETURN["Images"][ValeurAleatoireDico(Object.fromEntries(Object.entries(DICORETURN["Images"]).filter(([key, value]) => value["Type"] === "p")))]["Image"]}");' class='grille'>`;
     }
     for (let x = 0; x < X; x++) {
         for (let y = 0; y < Y; y++) {
@@ -444,10 +445,16 @@ function Click(NB, NUM, X, Y, CAT) {
                 }
             };
         } else {
-            alert("Fini");
+            document.getElementById("audioFin").play();
+            alert(`Bravo tu as terminé avec seulement ${SCORE} erreurs`);
         }
     } else {
-        console.log("raté")
+        SCORE++;
+        console.log("raté");
+        var box = document.getElementById(String(NB));
+        box.classList.remove('animate');  // Remove the class to restart the animation if already present
+        void box.offsetWidth;  // Trigger reflow to reset the animation
+        box.classList.add('animate');
         for (let i = 1; i < X * Y + 1; i++) {
             let as = document.getElementById(String(i));
             if (as.style.visibility === "hidden") {
@@ -559,8 +566,13 @@ function ModifLang() {
     var selectedOption = document.getElementById("language").value;
     localStorage.setItem('LangS', selectedOption);
     location.reload();
-
 }
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 's') {
+        document.getElementById("son-f").click();
+    }
+});
 
 async function general() {
     DICORETURN = await DatasVictory(DATAS_RANGE);
@@ -594,7 +606,7 @@ async function general() {
             Temp2 += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
         }
     })
-    var Text = `<button class="jouer" onclick="Launch()">${DICOLANGtoSEE["Play"]}</button><div class="form-group"><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}"><div class="form-group"><select id="rep" name="rep"><option value="1">Faible</option><option value="5">Moyen</option><option value="10">Fort</option></select>`;
+    var Text = `<button class="jouer" onclick="Launch()">${DICOLANGtoSEE["Play"]}</button><div class="form-group"><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}"><div class="form-group"><select id="rep" name="rep"><option value="1">Faible</option><option value="4">Moyen</option><option value="10">Fort</option></select>`;
     Temp = `<select id="catégorie" name="catégorie"><option value="all">TOUT</option>`;
     Object.keys(DICORETURN["Catégorie"]).forEach(cat => {
         let cati = DICORETURN["Catégorie"][cat];
@@ -604,5 +616,4 @@ async function general() {
     document.getElementById("container").innerHTML = Text + Temp + "</select></div>";
     let obj = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1];
     document.getElementById("modifier").innerHTML = obj["Modify"];
-    document.getElementById("language-button").innerHTML = obj["Language"];
 }
