@@ -18,11 +18,7 @@ function ModifInputs(input) {
             var DataToAff = "Mot";
             break;
         case "jp-JP":
-            if (DATA[Num]["Kanji"] !== undefined) {
-                var DataToAff = "Kanji";
-            } else {
-                var DataToAff = "Hiragana";
-            }
+            var DataToAff = "Hiragana";
             break;
         default:
             var DataToAff = LANGUEtoTEACH;
@@ -47,7 +43,11 @@ function ModifInputs(input) {
                 var Temp2 = "Mot";
                 break;
             case "jp-JP":
-                var Temp2 = "Hiragana";
+                if (DATA[Num]["Kanji"] !== undefined) {
+                    var Temp2 = "Kanji";
+                } else {
+                    var Temp2 = "Hiragana";
+                }
                 break;
             default:
                 var Temp2 = LANGUEtoSEE;
@@ -104,7 +104,11 @@ function Launch() {
             var Temp2 = "Mot";
             break;
         case "jp-JP":
-            var Temp2 = "Hiragana";
+            if (DATA[Num]["Kanji"] !== undefined) {
+                var Temp2 = "Kanji";
+            } else {
+                var Temp2 = "Hiragana";
+            }
             break;
         default:
             var Temp2 = LANGUEtoSEE;
