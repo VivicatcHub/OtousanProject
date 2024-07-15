@@ -585,9 +585,9 @@ function Launch() {
     // console.log(CAT);
     document.getElementById('container').innerHTML = CreerGrille(X, Y, DICORETURN["Mots"], CAT);
     PLAY = ValeurAleatoireListe(CASES);
-    document.getElementById("containerD").innerHTML = `<button id="son-f"><img src="../speaker_f.png" alt="JOUER"></img></button><p id="wtf"></p><button id="son-h"><img src="../speaker_h.png" alt="JOUER"></img></button><button id="retry" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
+    document.getElementById("containerD").innerHTML = `<div class="containerB"><button id="son-f"><img src="../speaker_f.png" alt="JOUER"></img></button><p id="wtf"></p><button id="son-h"><img src="../speaker_h.png" alt="JOUER"></img></button></div><button id="retry" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
     document.getElementById('son-h').onclick = function () {
-        // console.log(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], LANGUEtoTEACH)
+        // console.log(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], LANGUEtoTEACH) 
         switch (LANGUEtoTEACH) {
             case "fr-FR":
                 SpeakTextH(DICORETURN["Mots"][PLAY]["Mot"]);

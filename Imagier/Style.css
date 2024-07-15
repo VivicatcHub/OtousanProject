@@ -272,7 +272,7 @@ input[type="text"]:focus {
     }
 
     .containerD {
-        flex-direction: row;
+        flex-direction: column;
         /* Change la direction en ligne */
         justify-content: space-around;
         /* Espacement entre les éléments */
@@ -300,6 +300,15 @@ input[type="text"]:focus {
 
     .container input[type="number"] {
         width: 70%;
+    }
+
+    .containerB {
+        display: flex;
+        flex-direction: row;
+    }
+
+    #wtf {
+        margin-top: 5px;
     }
 }
 
