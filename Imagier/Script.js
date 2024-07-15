@@ -402,6 +402,14 @@ function adjustFontSize() {
         maxFontSize: 100,
         minFontSize: 6
     });
+    textFit(document.querySelectorAll(".adj"), {
+        alignHoriz: true,
+        alignVert: true,
+        multiLine: true,
+        detectMultiLine: false,
+        maxFontSize: 100,
+        minFontSize: 6
+    });
 }
 
 window.onload = adjustFontSize;
@@ -575,7 +583,7 @@ function Click(NB, NUM, X, Y, CAT) {
 
 function Retry() {
     location.reload();
-    general;
+    // general;
 }
 
 function Launch() {

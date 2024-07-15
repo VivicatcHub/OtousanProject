@@ -8,73 +8,78 @@ if (LANGUEtoTEACH === null) {
     LANGUEtoTEACH = "jp-JP";
     localStorage.setItem('LangT', LANGUEtoTEACH);
 }
+var CAT = localStorage.getItem('Diff');
+if (CAT === null) {
+    CAT = "all";
+    localStorage.setItem('Cat', CAT);
+}
+var NBMOTS = localStorage.getItem('NbMots');
+if (NBMOTS === null) {
+    NBMOTS = "all";
+    localStorage.setItem('NbMots', NBMOTS);
+}
+var DIFF = localStorage.getItem('Diff');
+if (DIFF === null) {
+    DIFF = "1";
+    localStorage.setItem('Diff', DIFF);
+}
 var DICORETURN = {};
 var VAL = "";
+var LISTEMOTS = [];
+var SCORE = 0;
+var HELPRES = 0;
+
+function JapOrNot() {
+    if (LANGUEtoTEACH === "jp-JP") {
+        return ` (${DICORETURN["Mots"][VAL]["Kanji"]})`;
+    } else {
+        return "";
+    }
+}
 
 function ModifInputs(input) {
-    input.style.width = ((input.value.length + 2) * 8) + 'px';
+    // input.style.width = ((input.value.length + 2) * 10) + 'px';
     switch (LANGUEtoTEACH) {
+        case "fr-FR":
+            var Temp = "Mot";
+            break;
+        case "jp-JP":
+            var Temp = "Hiragana";
+            break;
+        default:
+            var Temp = LANGUEtoTEACH;
+            break;
+    }
+    switch (LANGUEtoSEE) {
         case "fr-FR":
             var DataToAff = "Mot";
             break;
         case "jp-JP":
-            var DataToAff = "Hiragana";
+            if (DATA[Num]["Kanji"] !== undefined) {
+                var DataToAff = "Kanji";
+            } else {
+                var DataToAff = "Hiragana";
+            }
             break;
         default:
-            var DataToAff = LANGUEtoTEACH;
+            var DataToAff = LANGUEtoSEE;
             break;
 
     }
-    if (DICORETURN["Mots"][VAL][DataToAff].toUpperCase() === input.value.toUpperCase()) {
+    if (DICORETURN["Mots"][VAL][Temp].toUpperCase() === input.value.toUpperCase()) {
+        document.getElementById('wtf').innerHTML = `${DICORETURN["Mots"][VAL][DataToAff].toUpperCase()}<br>${DICORETURN["Mots"][VAL][Temp].toUpperCase()}${JapOrNot()}`;
+        SCORE++;
         input.value = "";
-        switch (LANGUEtoTEACH) {
-            case "fr-FR":
-                var Temp = "Mot";
-                break;
-            case "jp-JP":
-                var Temp = "Hiragana";
-                break;
-            default:
-                var Temp = LANGUEtoTEACH;
-                break;
+        if (LISTEMOTS.length >= 1) {
+            VAL = LISTEMOTS[0];
+            LISTEMOTS = LISTEMOTS.slice(1);
+        } else {
+            alert(`Bravo, tu as trouvé ${SCORE} mot(s)`);
+            document.getElementById("container").remove();
+            document.getElementById("hiragana").remove();
         }
-        switch (LANGUEtoSEE) {
-            case "fr-FR":
-                var Temp2 = "Mot";
-                break;
-            case "jp-JP":
-                if (DATA[Num]["Kanji"] !== undefined) {
-                    var Temp2 = "Kanji";
-                } else {
-                    var Temp2 = "Hiragana";
-                }
-                break;
-            default:
-                var Temp2 = LANGUEtoSEE;
-                break;
-        }
-        VAL = ValeurAleatoireDico(Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null).reduce((acc, [key, value]) => {
-            acc[key] = value;
-            return acc;
-        }, {}));
         if (DICORETURN["Mots"][VAL]["Image"] === null || DICORETURN["Mots"][VAL]["Image"] === undefined) {
-            switch (LANGUEtoSEE) {
-                case "fr-FR":
-                    var DataToAff = "Mot";
-                    break;
-                case "jp-JP":
-                    if (DATA[Num]["Kanji"] !== undefined) {
-                        var DataToAff = "Kanji";
-                    } else {
-                        var DataToAff = "Hiragana";
-                    }
-                    break;
-                default:
-                    var DataToAff = LANGUEtoSEE;
-                    break;
-    
-            }
-            console.log(DICORETURN["Mots"][VAL][DataToAff], DataToAff)
+            // console.log(DICORETURN["Mots"][VAL][DataToAff], DataToAff)
             document.getElementById("container").innerHTML = `<button disabled class="button-grille-quiz"><p class="p-grille-quiz">${DICORETURN["Mots"][VAL][DataToAff].toUpperCase()}</p></button>`;
         } else {
             document.getElementById("container").innerHTML = `<button disabled class="button-grille-quiz"><img class="img-grille-quiz" src="${DICORETURN["Mots"][VAL]["Image"]}"></img></button>`;
@@ -83,11 +88,7 @@ function ModifInputs(input) {
     }
 }
 
-function Launch() {
-    LANGUEtoTEACH = document.getElementById("language2").value;
-    localStorage.setItem('LangT', LANGUEtoTEACH);
-    console.log(localStorage.getItem("LangT"));
-    document.getElementById("container").classList = "containerB"
+function CreerListeMots() {
     switch (LANGUEtoTEACH) {
         case "fr-FR":
             var Temp = "Mot";
@@ -114,10 +115,106 @@ function Launch() {
             var Temp2 = LANGUEtoSEE;
             break;
     }
-    VAL = ValeurAleatoireDico(Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null).reduce((acc, [key, value]) => {
-        acc[key] = value;
-        return acc;
-    }, {}));
+    if (CAT === "all") {
+        var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
+    } else {
+        var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null && value["Catégorie"] == CAT).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
+    }
+    let Len = Math.min(Object.keys(Liste).length, Math.max(NBMOTS !== "all" ? NBMOTS : -Infinity, Object.keys(Liste).length));
+    console.log(Liste, Len);
+    for (let i = 0; i < Len; i++) {
+        let Temp = ValeurAleatoireDico(Liste);
+        delete Liste[Temp];
+        LISTEMOTS.push(Temp);
+        // console.log(Temp, Object.keys(Liste).length, i);
+    }
+    console.log(LISTEMOTS);
+}
+
+function HelpRes() {
+    if (DIFF === "1") {
+        return "∞";
+    } else {
+        return HELPRES;
+    }
+}
+
+function Help() {
+    switch (LANGUEtoTEACH) {
+        case "fr-FR":
+            var Temp = "Mot";
+            break;
+        case "jp-JP":
+            var Temp = "Hiragana";
+            break;
+        default:
+            var Temp = LANGUEtoTEACH;
+            break;
+    }
+    alert(DICORETURN["Mots"][VAL][Temp]);
+    HELPRES--;
+    document.getElementById("RepRes").innerHTML = `${DICOLANGtoSEE["Left"]}:<br>${HelpRes()}`;
+    if (HELPRES === 0 && DIFF !== "1") {
+        document.getElementById("help").disabled = true;
+        document.getElementById("help").style.cursor = "default";
+        document.getElementById("audio-h").onclick = "";
+        document.getElementById("audio-h").style.cursor = "default";
+        document.getElementById("audio-f").onclick = "";
+        document.getElementById("audio-f").style.cursor = "default";
+    }
+}
+
+function HelpAudio(SEXE) {
+    switch (LANGUEtoTEACH) {
+        case "fr-FR":
+            var Temp = "Mot";
+            break;
+        case "jp-JP":
+            var Temp = "Hiragana";
+            break;
+        default:
+            var Temp = LANGUEtoTEACH;
+            break;
+    }
+    let Text = DICORETURN["Mots"][VAL][Temp];
+    if (SEXE === "h") {
+        SpeakTextH(Text);
+    } else {
+        SpeakTextF(Text);
+    }
+    HELPRES--;
+    document.getElementById("RepRes").innerHTML = `${DICOLANGtoSEE["Left"]}:<br>${HelpRes()}`;
+    if (HELPRES === 0 && DIFF !== "1") {
+        document.getElementById("help").disabled = true;
+        document.getElementById("help").style.cursor = "default";
+        document.getElementById("audio-h").onclick = "";
+        document.getElementById("audio-h").style.cursor = "default";
+        document.getElementById("audio-f").onclick = "";
+        document.getElementById("audio-f").style.cursor = "default";
+    }
+}
+
+function Launch() {
+    NBMOTS = document.getElementById("nbmot").value;
+    localStorage.setItem("NbMots", NBMOTS);
+    DIFF = document.getElementById("rep").value;
+    if (DIFF === "4") {
+        HELPRES = 25;
+    } else {
+        HELPRES = 5;
+    }
+    localStorage.setItem("Diff", DIFF)
+    document.getElementById("containerD").innerHTML = `<p id="wtf"></p><div style="align-items: center;display:flex; flex-direction: column;border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 5px;">${DICOLANGtoSEE["Help"]}<br><button class="adj" id="help" onclick="Help()">Réponse</button><div><img style="cursor: pointer;" src="../speaker_f.png" onclick="HelpAudio('f')" id="audio-h"></img><img style="cursor: pointer;" src="../speaker_h.png" onclick="HelpAudio('h')" id="audio-f"></img></div><div id="RepRes">${DICOLANGtoSEE["Left"]}:<br>${HelpRes()}</div></div><button class="adj" id="retry" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
+    document.getElementById("hiragana").style.visibility = "visible";
+    CAT = document.getElementById("catégorie").value;
+    localStorage.setItem("Cat", CAT)
+    LANGUEtoTEACH = document.getElementById("language2").value;
+    localStorage.setItem('LangT', LANGUEtoTEACH);
+    console.log(localStorage.getItem("LangT"));
+    document.getElementById("container").classList = "containerB";
+    CreerListeMots();
+    VAL = LISTEMOTS[0];
+    LISTEMOTS = LISTEMOTS.slice(1);
     console.log(DICORETURN["Mots"][VAL], VAL);
     if (DICORETURN["Mots"][VAL]["Image"] === null || DICORETURN["Mots"][VAL]["Image"] === undefined) {
         switch (LANGUEtoSEE) {
@@ -134,7 +231,6 @@ function Launch() {
             default:
                 var DataToAff = LANGUEtoSEE;
                 break;
-
         }
         console.log(DICORETURN["Mots"][VAL][DataToAff], DataToAff)
         document.getElementById("container").innerHTML = `<button disabled class="button-grille-quiz"><p class="p-grille-quiz">${DICORETURN["Mots"][VAL][DataToAff].toUpperCase()}</p></button>`;
@@ -142,6 +238,14 @@ function Launch() {
         document.getElementById("container").innerHTML = `<button disabled class="button-grille-quiz"><img class="img-grille-quiz" src="${DICORETURN["Mots"][VAL]["Image"]}"></img></button>`;
     }
     adjustFontSize();
+}
+
+function SelectedOrNot3(NB) {
+    if (NB == localStorage.getItem("NbMots")) {
+        return "selected ";
+    } else {
+        return "";
+    }
 }
 
 async function GeneralQuiz() {
@@ -179,7 +283,7 @@ async function GeneralQuiz() {
             Temp += `<option value="${cat}">${cati[localStorage.getItem("LangS")]}</option>`;
         }
     })
-    document.getElementById("container").innerHTML = Text + Temp + "</select></div>";
+    document.getElementById("container").innerHTML = Text + Temp + `</select><select id="nbmot" name="nbmot"><option ${SelectedOrNot3("all")}value="all">${DICOLANGtoSEE["All"]}</option><option ${SelectedOrNot3("25")}value="25">25 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("50")}value="50">50 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("100")}value="100">100 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("250")}value="250">250 ${DICOLANGtoSEE["Word"]}</option></select></div>`;
     /*
     Temp = `<select id="voice" name="voice"><option ${SelectedOrNot2("son-f")}value="son-f">${DICOLANGtoSEE["Voice"]} 1</option><option ${SelectedOrNot2("son-h")}value="son-h">${DICOLANGtoSEE["Voice"]} 2</option></select>`;
     if (window.innerWidth > 1000) {

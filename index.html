@@ -10,21 +10,21 @@
 </head>
 
 <body>
-    <div class="container">
-        <a href="Imagier/" class="box">
-            <img src="https://3.bp.blogspot.com/--qn4_aEFfpc/Uw-flDqcwoI/AAAAAAAADkU/dN5Yv5p03lM/s1600/imagier+1.png"
-                alt="Imagier">
-            <div class="name" id="Imagier">Imagier</div>
+    <div id="container" class="container">
+        <a href="Games/" class="box">
+            <div class="name" id="Games">GAMES</div>
+            <img src="https://th.bing.com/th/id/OIP.MXoRerPKuLj51SblpUrbmwHaE5?rs=1&pid=ImgDetMain"
+                alt="Games">
         </a>
-        <a href="Quiz/" class="box">
-            <img src="https://static.vecteezy.com/system/resources/previews/003/298/046/large_2x/students-standing-around-large-quiz-notes-and-stacks-of-books-vector.jpg"
-                alt="Quiz">
-            <div class="name" id="Quiz">Quiz</div>
+        <a href="news.html" class="box">
+            <div class="name" id="News">GAMES</div>
+            <img src="https://img.freepik.com/vecteurs-premium/ensemble-journaux-illustration-aquarelle-stand-presse_534606-8.jpg?w=2000"
+                alt="News">
         </a>
         <a href="Test/" class="box">
+            <div class="name">Test</div>
             <img src="https://th.bing.com/th/id/OIP.dmFG8cHtySaVAp9evFw_HwHaEF?w=336&h=185&c=7&r=0&o=5&pid=1.7"
                 alt="Test">
-            <div class="name">Test</div>
         </a>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/textfit/2.4.0/textFit.js"></script>
@@ -33,8 +33,8 @@
     <script>
         async function GeneralIndex() {
             DICORETURN = await DatasVictory(DATAS_RANGE);
-            document.getElementById("Imagier").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Imagier"];
-            document.getElementById("Quiz").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Quiz"];
+            document.getElementById("Games").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Games"];
+            document.getElementById("News").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["News"];
         }
 
         GeneralIndex();

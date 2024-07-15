@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OtousanProject</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+    <div id="container" class="container">
+        <a href="../Imagier/" class="box">
+            <div class="name" id="Imagier">IMAGIER</div>
+            <img src="https://3.bp.blogspot.com/--qn4_aEFfpc/Uw-flDqcwoI/AAAAAAAADkU/dN5Yv5p03lM/s1600/imagier+1.png"
+                alt="Imagier">
+        </a>
+        <a href="../Quiz/" class="box">
+            <div class="name" id="Quiz">QUIZ</div>
+            <img src="https://static.vecteezy.com/system/resources/previews/003/298/046/large_2x/students-standing-around-large-quiz-notes-and-stacks-of-books-vector.jpg"
+                alt="Quiz">
+        </a>
+        <a href="../Dictionnaire/" class="box">
+            <div class="name" id="Dictionnaire">DICTIONNAIRE</div>
+            <img src="https://th.bing.com/th/id/R.964d7f3ce9abf14728cf4d2562bc1c32?rik=JCXsGRAAqUeGEQ&pid=ImgRaw&r=0"
+                alt="Dictionnaire">
+        </a>
+        <a href="../" class="box">
+            <div class="name" id="Menu">MENU</div>
+            <img src="https://th.bing.com/th/id/R.f6e312b4679dde076da5446ada6ffa03?rik=xDyELxtDvKxaQQ&pid=ImgRaw&r=0"
+                alt="Menu">
+        </a>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/textfit/2.4.0/textFit.js"></script>
+    <script src="../Data.js"></script>
+    <script src="../Imagier/Script.js"></script>
+    <script>
+        async function GeneralIndex() {
+            DICORETURN = await DatasVictory(DATAS_RANGE);
+            document.getElementById("Imagier").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Imagier"];
+            document.getElementById("Menu").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Menu"];
+            document.getElementById("Quiz").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Quiz"];
+            document.getElementById("Dictionnaire").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Dico"];
+        }
+
+        GeneralIndex();
+    </script>
+</body>
+
+</html>

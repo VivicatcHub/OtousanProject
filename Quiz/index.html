@@ -14,10 +14,10 @@
 <body>
     <div class="containerG">
         <div class="container", id="container"></div>
-        <input type="text" oninput="ModifInputs(this)" id="hiragana" name="hiragana" pattern="[\u3040-\u309F\u30A0-\u30FF]+"
-            title="Veuillez entrer uniquement des caractères Hiragana" required>
+        <input type="text" style="visibility: hidden;" oninput="ModifInputs(this)" id="hiragana" name="hiragana" required>
         <div class="containerD" id="containerD">
             <button onclick="Modif()" id="modifier">MODIFIER</button>
+            <button id="modifier"><a style="text-decoration: none; color: white;" href="../Games/">MENU</a></button>
         </div>
     </div>
     <audio id="audioFin" src="../victory.mp3"></audio>
