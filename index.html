@@ -16,6 +16,11 @@
                 alt="Imagier">
             <div class="name" id="Imagier">Imagier</div>
         </a>
+        <a href="Quiz/" class="box">
+            <img src="https://static.vecteezy.com/system/resources/previews/003/298/046/large_2x/students-standing-around-large-quiz-notes-and-stacks-of-books-vector.jpg"
+                alt="Quiz">
+            <div class="name" id="Quiz">Quiz</div>
+        </a>
         <a href="Test/" class="box">
             <img src="https://th.bing.com/th/id/OIP.dmFG8cHtySaVAp9evFw_HwHaEF?w=336&h=185&c=7&r=0&o=5&pid=1.7"
                 alt="Test">
@@ -29,6 +34,7 @@
         async function GeneralIndex() {
             DICORETURN = await DatasVictory(DATAS_RANGE);
             document.getElementById("Imagier").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Imagier"];
+            document.getElementById("Quiz").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Quiz"];
         }
 
         GeneralIndex();

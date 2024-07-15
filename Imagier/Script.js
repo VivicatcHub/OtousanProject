@@ -394,6 +394,14 @@ function adjustFontSize() {
         maxFontSize: 20,
         minFontSize: 6
     });
+    textFit(document.querySelectorAll(".p-grille-quiz"), {
+        alignHoriz: true,
+        alignVert: true,
+        multiLine: true,
+        detectMultiLine: false,
+        maxFontSize: 100,
+        minFontSize: 6
+    });
 }
 
 window.onload = adjustFontSize;
@@ -561,7 +569,7 @@ function Click(NB, NUM, X, Y, CAT) {
                 break;
             }
         }
-        adjustFontSize;
+        adjustFontSize();
     }
 }
 
