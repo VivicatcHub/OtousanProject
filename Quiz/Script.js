@@ -49,6 +49,14 @@ function JapOrNot() {
     }
 }
 
+document.getElementById('hiragana').addEventListener('focus', function() {
+    document.body.classList.add('open')
+});
+
+document.getElementById('hiragana').addEventListener('blur', function() {
+    document.body.classList.remove('open');
+});
+
 function ModifInputs(input) {
     // input.style.width = ((input.value.length + 2) * 10) + 'px';
     switch (LANGUEtoTEACH) {
