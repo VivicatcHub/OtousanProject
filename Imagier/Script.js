@@ -190,6 +190,8 @@ async function DatasVictory(DATAS) {
 function Modif() {
     let MODIF = 'true';
     localStorage.setItem('Modif', MODIF);
+    localStorage.setItem('Marathon', []);
+    localStorage.setItem('MaraScore', 0);
     location.reload();
 }
 
@@ -394,14 +396,25 @@ function adjustFontSize() {
         maxFontSize: 20,
         minFontSize: 6
     });
-    textFit(document.querySelectorAll(".p-grille-quiz"), {
-        alignHoriz: true,
-        alignVert: true,
-        multiLine: true,
-        detectMultiLine: false,
-        maxFontSize: 100,
-        minFontSize: 6
-    });
+    if (window.innerWidth > 650) {
+        textFit(document.querySelectorAll(".p-grille-quiz"), {
+            alignHoriz: true,
+            alignVert: true,
+            multiLine: true,
+            detectMultiLine: false,
+            maxFontSize: 100,
+            minFontSize: 6
+        });
+    } else {
+        textFit(document.querySelectorAll(".p-grille-quiz"), {
+            alignHoriz: true,
+            alignVert: true,
+            multiLine: true,
+            detectMultiLine: false,
+            maxFontSize: 20,
+            minFontSize: 6
+        });
+    }
     textFit(document.querySelectorAll(".adj"), {
         alignHoriz: true,
         alignVert: true,
@@ -601,7 +614,7 @@ function Launch() {
     // console.log(CAT);
     document.getElementById('container').innerHTML = CreerGrille(X, Y, DICORETURN["Mots"], CAT);
     PLAY = ValeurAleatoireListe(CASES);
-    document.getElementById("containerD").innerHTML = `<div class="containerB"><button id="son-f"><img src="../speaker_f.png" alt="JOUER"></img></button><p id="wtf"></p><button id="son-h"><img src="../speaker_h.png" alt="JOUER"></img></button></div><button id="retry" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
+    document.getElementById("containerD").innerHTML = `<div class="containerB"><button id="son-f"><img src="../speaker_f.png" alt="JOUER"></img></button><p id="wtf"></p><button id="son-h"><img src="../speaker_h.png" alt="JOUER"></img></button></div><button class="adj" id="retry" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
     document.getElementById('son-h').onclick = function () {
         // console.log(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], LANGUEtoTEACH) 
         switch (LANGUEtoTEACH) {

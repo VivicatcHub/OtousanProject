@@ -23,6 +23,16 @@ if (DIFF === null) {
     DIFF = "1";
     localStorage.setItem('Diff', DIFF);
 }
+var MARATHON = localStorage.getItem('Marathon');
+if (MARATHON === null) {
+    MARATHON = [];
+    localStorage.setItem('Marathon', MARATHON);
+}
+var MARASCORE = localStorage.getItem('MaraScore');
+if (MARASCORE === null) {
+    MARASCORE = 0;
+    localStorage.setItem('MaraScore', MARASCORE);
+}
 var DICORETURN = {};
 var VAL = "";
 var LISTEMOTS = [];
@@ -67,14 +77,16 @@ function ModifInputs(input) {
 
     }
     if (DICORETURN["Mots"][VAL][Temp].toUpperCase() === input.value.toUpperCase()) {
-        document.getElementById('wtf').innerHTML = `${DICORETURN["Mots"][VAL][DataToAff].toUpperCase()}<br>${DICORETURN["Mots"][VAL][Temp].toUpperCase()}${JapOrNot()}`;
+        document.getElementById('wtf').innerHTML = `${DICORETURN["Mots"][VAL][DataToAff].toUpperCase()}<br>${DICORETURN["Mots"][VAL][Temp].toUpperCase()}${JapOrNot()}<br>${DICOLANGtoSEE["Word"]} ${DICOLANGtoSEE["Left"]}: ${LISTEMOTS.length}`;
         SCORE++;
         input.value = "";
         if (LISTEMOTS.length >= 1) {
             VAL = LISTEMOTS[0];
             LISTEMOTS = LISTEMOTS.slice(1);
+            console.log(LISTEMOTS, LISTEMOTS.length);
         } else {
-            alert(`Bravo, tu as trouvé ${SCORE} mot(s)`);
+            document.getElementById("audioFin").play();
+            alert(`Bravo, tu as trouvé ${SCORE + MARASCORE} mot(s)`);
             document.getElementById("container").remove();
             document.getElementById("hiragana").remove();
         }
@@ -89,44 +101,48 @@ function ModifInputs(input) {
 }
 
 function CreerListeMots() {
-    switch (LANGUEtoTEACH) {
-        case "fr-FR":
-            var Temp = "Mot";
-            break;
-        case "jp-JP":
-            var Temp = "Hiragana";
-            break;
-        default:
-            var Temp = LANGUEtoTEACH;
-            break;
-    }
-    switch (LANGUEtoSEE) {
-        case "fr-FR":
-            var Temp2 = "Mot";
-            break;
-        case "jp-JP":
-            if (DATA[Num]["Kanji"] !== undefined) {
-                var Temp2 = "Kanji";
-            } else {
-                var Temp2 = "Hiragana";
-            }
-            break;
-        default:
-            var Temp2 = LANGUEtoSEE;
-            break;
-    }
-    if (CAT === "all") {
-        var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
+    if (MARATHON.length === 0) {
+        switch (LANGUEtoTEACH) {
+            case "fr-FR":
+                var Temp = "Mot";
+                break;
+            case "jp-JP":
+                var Temp = "Hiragana";
+                break;
+            default:
+                var Temp = LANGUEtoTEACH;
+                break;
+        }
+        switch (LANGUEtoSEE) {
+            case "fr-FR":
+                var Temp2 = "Mot";
+                break;
+            case "jp-JP":
+                if (DATA[Num]["Kanji"] !== undefined) {
+                    var Temp2 = "Kanji";
+                } else {
+                    var Temp2 = "Hiragana";
+                }
+                break;
+            default:
+                var Temp2 = LANGUEtoSEE;
+                break;
+        }
+        if (CAT === "all") {
+            var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
+        } else {
+            var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null && value["Catégorie"] == CAT).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
+        }
+        let Len = parseInt(NBMOTS !== "all" ? NBMOTS : Object.keys(Liste).length);
+        console.log(Liste, Len);
+        for (let i = 0; i < Len; i++) {
+            let Temp = ValeurAleatoireDico(Liste);
+            delete Liste[Temp];
+            LISTEMOTS.push(Temp);
+            // console.log(Temp, Object.keys(Liste).length, i);
+        }
     } else {
-        var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null && value["Catégorie"] == CAT).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
-    }
-    let Len = Math.min(Object.keys(Liste).length, Math.max(NBMOTS !== "all" ? NBMOTS : -Infinity, Object.keys(Liste).length));
-    console.log(Liste, Len);
-    for (let i = 0; i < Len; i++) {
-        let Temp = ValeurAleatoireDico(Liste);
-        delete Liste[Temp];
-        LISTEMOTS.push(Temp);
-        // console.log(Temp, Object.keys(Liste).length, i);
+        LISTEMOTS = MARATHON.split(",");
     }
     console.log(LISTEMOTS);
 }
@@ -194,6 +210,12 @@ function HelpAudio(SEXE) {
     }
 }
 
+function Pause() {
+    localStorage.setItem("Marathon", LISTEMOTS);
+    localStorage.setItem("MaraScore", SCORE);
+    Retry();
+}
+
 function Launch() {
     NBMOTS = document.getElementById("nbmot").value;
     localStorage.setItem("NbMots", NBMOTS);
@@ -204,7 +226,7 @@ function Launch() {
         HELPRES = 5;
     }
     localStorage.setItem("Diff", DIFF)
-    document.getElementById("containerD").innerHTML = `<p id="wtf"></p><div style="align-items: center;display:flex; flex-direction: column;border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 5px;">${DICOLANGtoSEE["Help"]}<br><button class="adj" id="help" onclick="Help()">Réponse</button><div><img style="cursor: pointer;" src="../speaker_f.png" onclick="HelpAudio('f')" id="audio-h"></img><img style="cursor: pointer;" src="../speaker_h.png" onclick="HelpAudio('h')" id="audio-f"></img></div><div id="RepRes">${DICOLANGtoSEE["Left"]}:<br>${HelpRes()}</div></div><button class="adj" id="retry" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
+    document.getElementById("containerD").innerHTML = `<p id="wtf"></p><div style="align-items: center;display:flex; flex-direction: column;border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 5px;">${DICOLANGtoSEE["Help"]}<br><button class="adj" id="help" onclick="Help()">Réponse</button><div><img style="cursor: pointer;" src="../speaker_f.png" onclick="HelpAudio('f')" id="audio-h"></img><img style="cursor: pointer;" src="../speaker_h.png" onclick="HelpAudio('h')" id="audio-f"></img></div><div id="RepRes">${DICOLANGtoSEE["Left"]}:<br>${HelpRes()}</div></div><button class="adj" id="retry" onclick="Pause()">${DICOLANGtoSEE["Pause"]}</button><button class="adj" id="pause" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
     document.getElementById("hiragana").style.visibility = "visible";
     CAT = document.getElementById("catégorie").value;
     localStorage.setItem("Cat", CAT)
@@ -248,6 +270,14 @@ function SelectedOrNot3(NB) {
     }
 }
 
+function IfMarathon() {
+    if (localStorage.getItem("MaraScore") == 0) {
+        return DICOLANGtoSEE["Play"];
+    } else {
+        return DICOLANGtoSEE["Reprendre"];
+    }
+}
+
 async function GeneralQuiz() {
     DICORETURN = await DatasVictory(DATAS_RANGE);
     var Temp = "";
@@ -272,7 +302,7 @@ async function GeneralQuiz() {
             Temp2 += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
         }
     })
-    var Text = `<button class="jouer" id="jouer" onclick="Launch()">${DICOLANGtoSEE["Play"]}</button><div class="form-group"><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><div class="form-group"><select id="rep" name="rep"><option ${SelectedOrNot("1")}value="1">${DICOLANGtoSEE["Easy"]}</option><option ${SelectedOrNot("4")}value="4">${DICOLANGtoSEE["Medium"]}</option><option ${SelectedOrNot("10")}value="10">${DICOLANGtoSEE["Hard"]}</option></select>`;
+    var Text = `<button class="jouer" id="jouer" onclick="Launch()">${IfMarathon()}</button><div class="form-group"><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><div class="form-group"><select id="rep" name="rep"><option ${SelectedOrNot("1")}value="1">${DICOLANGtoSEE["Easy"]}</option><option ${SelectedOrNot("4")}value="4">${DICOLANGtoSEE["Medium"]}</option><option ${SelectedOrNot("10")}value="10">${DICOLANGtoSEE["Hard"]}</option></select>`;
     Temp = `<select id="catégorie" name="catégorie"><option value="all">${DICOLANGtoSEE["All"]}</option>`;
     Object.keys(DICORETURN["Catégorie"]).forEach(cat => {
         let cati = DICORETURN["Catégorie"][cat];

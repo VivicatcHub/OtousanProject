@@ -1,3 +1,8 @@
+body {
+    display: flex;
+    justify-content: space-around;
+}
+
 .button-grille-quiz {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -33,7 +38,11 @@
     overflow-wrap: break-word;
 }
 
-@media (max-width: 500px) {
+.containerD {
+    margin: 0;
+}
+
+@media (max-width: 650px) {
     .button-grille-quiz {
         -webkit-appearance: none;
         -moz-appearance: none;
