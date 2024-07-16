@@ -51,7 +51,7 @@ function JapOrNot() {
 }
 
 document.getElementById('hiragana').addEventListener('focus', function() {
-    if (MediaDeviceInfo.mobile()) {
+    if (md.mobile()) {
         document.body.classList.add('open');
     }
 });
