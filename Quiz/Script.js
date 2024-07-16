@@ -38,6 +38,7 @@ var VAL = "";
 var LISTEMOTS = [];
 var SCORE = 0;
 var HELPRES = 0;
+var md = new MobileDetect(window.navigator.userAgent);
 
 function JapOrNot() {
     if (LANGUEtoTEACH === "jp-JP") {
@@ -50,7 +51,9 @@ function JapOrNot() {
 }
 
 document.getElementById('hiragana').addEventListener('focus', function() {
-    document.body.classList.add('open')
+    if (MediaDeviceInfo.mobile()) {
+        document.body.classList.add('open');
+    }
 });
 
 document.getElementById('hiragana').addEventListener('blur', function() {
@@ -87,7 +90,7 @@ function ModifInputs(input) {
 
     }
     if (DICORETURN["Mots"][VAL][Temp].toUpperCase() === input.value.toUpperCase()) {
-        document.getElementById('wtf').innerHTML = `${DICORETURN["Mots"][VAL][DataToAff].toUpperCase()}<br>${DICORETURN["Mots"][VAL][Temp].toUpperCase()}${JapOrNot()}<br>${DICOLANGtoSEE["Word"]} ${DICOLANGtoSEE["Left"]}: ${LISTEMOTS.length}`;
+        document.getElementById('wtf').innerHTML = `${DICORETURN["Mots"][VAL][DataToAff].toUpperCase()}<br>${DICORETURN["Mots"][VAL][Temp].toUpperCase()}${JapOrNot()}<br>${DICOLANGtoSEE["Word"]} ${DICOLANGtoSEE["Left2"]}: ${LISTEMOTS.length}`;
         SCORE++;
         input.value = "";
         if (LISTEMOTS.length >= 1) {
@@ -236,7 +239,7 @@ function Launch() {
         HELPRES = 5;
     }
     localStorage.setItem("Diff", DIFF)
-    document.getElementById("containerD").innerHTML = `<p id="wtf"></p><div style="align-items: center;display:flex; flex-direction: column;border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 5px;">${DICOLANGtoSEE["Help"]}<br><button class="adj" id="help" onclick="Help()">Réponse</button><div><img style="cursor: pointer;" src="../speaker_f.png" onclick="HelpAudio('f')" id="audio-h"></img><img style="cursor: pointer;" src="../speaker_h.png" onclick="HelpAudio('h')" id="audio-f"></img></div><div id="RepRes">${DICOLANGtoSEE["Left"]}:<br>${HelpRes()}</div></div><button class="adj" id="retry" onclick="Pause()">${DICOLANGtoSEE["Pause"]}</button><button class="adj" id="pause" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
+    document.getElementById("containerD").innerHTML = `<p id="wtf"></p><div style="align-items: center;display:flex; flex-direction: column;border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 5px;">${DICOLANGtoSEE["Help"]}<br><button class="adj" id="help" onclick="Help()">${DICOLANGtoSEE["Réponse"]}</button><div><img style="cursor: pointer;" src="../speaker_f.png" onclick="HelpAudio('f')" id="audio-h"></img><img style="cursor: pointer;" src="../speaker_h.png" onclick="HelpAudio('h')" id="audio-f"></img></div><div id="RepRes">${DICOLANGtoSEE["Left2"]}:<br>${HelpRes()}</div></div><button class="adj" id="retry" onclick="Pause()">${DICOLANGtoSEE["Pause"]}</button><button class="adj" id="pause" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
     document.getElementById("hiragana").style.visibility = "visible";
     CAT = document.getElementById("catégorie").value;
     localStorage.setItem("Cat", CAT)

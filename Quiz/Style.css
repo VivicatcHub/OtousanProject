@@ -78,4 +78,8 @@ body {
     #hiragana {
         width: 130px;
     }
+
+    .containerD {
+        font-size: x-small !important;
+    }
 }
