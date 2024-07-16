@@ -1,3 +1,4 @@
 - Plusieurs Catégories
 - Catégorie -1
 - Records (par difficulté)
+- undefined kanji

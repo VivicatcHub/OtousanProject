@@ -41,7 +41,9 @@ var HELPRES = 0;
 
 function JapOrNot() {
     if (LANGUEtoTEACH === "jp-JP") {
-        return ` (${DICORETURN["Mots"][VAL]["Kanji"]})`;
+        if (DICORETURN["Mots"][VAL]["Kanji"] !== undefined) {
+            return ` (${DICORETURN["Mots"][VAL]["Kanji"]})`;
+        }
     } else {
         return "";
     }

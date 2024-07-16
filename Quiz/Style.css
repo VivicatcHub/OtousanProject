@@ -1,6 +1,7 @@
 body {
     display: flex;
     justify-content: space-around;
+    height: 60vh;
 }
 
 .button-grille-quiz {
@@ -14,6 +15,7 @@ body {
 
 .containerG {
     flex-direction: column !important;
+    margin: 5px;
 }
 
 .img-grille-quiz {
@@ -39,7 +41,11 @@ body {
 }
 
 .containerD {
-    margin: 0;
+    margin: 5px;
+}
+
+.open {
+    align-self: flex-end;
 }
 
 @media (max-width: 650px) {
