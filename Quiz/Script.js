@@ -50,13 +50,23 @@ function JapOrNot() {
 }
 
 document.getElementById('hiragana').addEventListener('focus', function () {
-    if (md.mobile() && localStorage.getItem("WebView") == "true") {
-        document.body.classList.add('open');
+    if (md.mobile()) {
+        if (localStorage.getItem("WebView")) {
+            document.body.classList.add('close');
+        } else {
+            document.body.classList.add('open');
+        }
     }
 });
 
 document.getElementById('hiragana').addEventListener('blur', function () {
-    document.body.classList.remove('open');
+    if (md.mobile()) {
+        if (localStorage.getItem("WebView")) {
+            document.body.classList.remove('close');
+        } else {
+            document.body.classList.remove('open');
+        }
+    }
 });
 
 function ModifInputs(input) {

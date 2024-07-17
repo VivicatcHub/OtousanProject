@@ -47,6 +47,10 @@ body {
     align-items: flex-end;
 }
 
+.close {
+    align-items: flex-start;
+}
+
 @media (max-width: 650px) {
     .button-grille-quiz {
         -webkit-appearance: none;
