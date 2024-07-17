@@ -1,2 +1,1 @@
-- Records (par difficulté)
-- ça bloque si on a moins de 25 mots
+- création de grille ne marche pas pour peu d'image

@@ -35,7 +35,7 @@ if (MARASCORE === null) {
 }
 var RECORDS = localStorage.getItem('RecordsQuiz');
 if (RECORDS === null) {
-    RECORDS = { "Easy": 0, "Medium": 0, "Hard": 0 };
+    RECORDS = "0,0,0";
     localStorage.setItem('RecordsQuiz', RECORDS);
 }
 var DICORETURN = {};
@@ -113,21 +113,24 @@ function ModifInputs(input) {
             console.log(LISTEMOTS, LISTEMOTS.length);
         } else {
             document.getElementById("audioFin").play();
-            let Result = parseInt(SCORE) + parseInt(MARASCORE)
+            let Result = parseInt(SCORE) + parseInt(MARASCORE);
             alert(`Bravo, tu as trouvé ${Result} mot(s)`);
             document.getElementById("container").remove();
             document.getElementById("hiragana").remove();
+            RECORDS = RECORDS.split(",")
             switch(DIFF) {
                 case "1":
-                    RECORDS["Easy"] = Math.max(RECORDS["Easy"], Result);
+                    RECORDS[0] = Math.max(RECORDS[0], Result);
                     break;
                 case "4":
-                    RECORDS["Medium"] = Math.max(RECORDS["Medium"], Result);
+                    RECORDS[1] = Math.max(RECORDS[1], Result);
                     break;
                 case "10":
-                    RECORDS["Hard"] = Math.max(RECORDS["Hard"], Result);
+                    RECORDS[2] = Math.max(RECORDS[2], Result);
                     break;
             }
+            localStorage.setItem("RecordsQuiz", RECORDS);
+            // console.log(RECORDS);
         }
         if (DICORETURN["Mots"][VAL]["Image"] === null || DICORETURN["Mots"][VAL]["Image"] === undefined) {
             // console.log(DICORETURN["Mots"][VAL][DataToAff], DataToAff)
@@ -207,6 +210,17 @@ function HelpRes() {
     }
 }
 
+function Block() {
+    if (HELPRES <= 0 && DIFF !== "1") {
+        document.getElementById("help").disabled = true;
+        document.getElementById("help").style.cursor = "default";
+        document.getElementById("audio-h").onclick = "";
+        document.getElementById("audio-h").style.cursor = "default";
+        document.getElementById("audio-f").onclick = "";
+        document.getElementById("audio-f").style.cursor = "default";
+    }
+}
+
 function Help() {
     switch (LANGUEtoTEACH) {
         case "fr-FR":
@@ -219,17 +233,12 @@ function Help() {
             var Temp = LANGUEtoTEACH;
             break;
     }
-    alert(DICORETURN["Mots"][VAL][Temp]);
-    HELPRES--;
-    document.getElementById("RepRes").innerHTML = `${DICOLANGtoSEE["Left"]}:<br>${HelpRes()}`;
-    if (HELPRES === 0 && DIFF !== "1") {
-        document.getElementById("help").disabled = true;
-        document.getElementById("help").style.cursor = "default";
-        document.getElementById("audio-h").onclick = "";
-        document.getElementById("audio-h").style.cursor = "default";
-        document.getElementById("audio-f").onclick = "";
-        document.getElementById("audio-f").style.cursor = "default";
+    if (HELPRES > 0 || HELPRES === "all") {
+        alert(DICORETURN["Mots"][VAL][Temp]);
+        HELPRES--;
+        document.getElementById("RepRes").innerHTML = `${DICOLANGtoSEE["Left"]}:<br>${HelpRes()}`;
     }
+    Block();
 }
 
 function HelpAudio(SEXE) {
@@ -263,19 +272,24 @@ function HelpAudio(SEXE) {
 }
 
 function Pause() {
-    localStorage.setItem("Marathon", LISTEMOTS);
+    localStorage.setItem("Marathon", [VAL].concat(LISTEMOTS));
     localStorage.setItem("MaraScore", SCORE);
+    localStorage.setItem("MaraHelp", HELPRES);
     Retry();
 }
 
 function Launch() {
     NBMOTS = document.getElementById("nbmot").value;
     localStorage.setItem("NbMots", NBMOTS);
+    if (NBMOTS === "other") {
+        let userInput = prompt("Please enter your number:");
+        NBMOTS = parseInt(userInput);
+    }
     DIFF = document.getElementById("rep").value;
     if (DIFF === "4") {
-        HELPRES = 25;
+        HELPRES = Math.min(25, parseInt(localStorage.getItem("MaraHelp")));
     } else {
-        HELPRES = 5;
+        HELPRES = Math.min(5, parseInt(localStorage.getItem("MaraHelp")));
     }
     localStorage.setItem("Diff", DIFF)
     document.getElementById("containerD").innerHTML = `<p id="wtf"></p><div style="align-items: center;display:flex; flex-direction: column;border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 5px;">${DICOLANGtoSEE["Help"]}<br><button class="adj" id="help" onclick="Help()">${DICOLANGtoSEE["Réponse"]}</button><div><img style="cursor: pointer;" src="../speaker_f.png" onclick="HelpAudio('f')" id="audio-h"></img><img style="cursor: pointer;" src="../speaker_h.png" onclick="HelpAudio('h')" id="audio-f"></img></div><div id="RepRes">${DICOLANGtoSEE["Left2"]}:<br>${HelpRes()}</div></div><button class="adj" id="retry" onclick="Pause()">${DICOLANGtoSEE["Pause"]}</button><button class="adj" id="pause" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
@@ -289,6 +303,7 @@ function Launch() {
     CreerListeMots();
     VAL = LISTEMOTS[0];
     LISTEMOTS = LISTEMOTS.slice(1);
+    Block();
     // console.log(DICORETURN["Mots"][VAL], VAL);
     if (DICORETURN["Mots"][VAL]["Image"] === null || DICORETURN["Mots"][VAL]["Image"] === undefined) {
         switch (LANGUEtoSEE) {
@@ -316,6 +331,8 @@ function Launch() {
 
 function SelectedOrNot3(NB) {
     if (NB == localStorage.getItem("NbMots")) {
+        return "selected ";
+    } else if (localStorage.getItem("NbMots") !== "all") {
         return "selected ";
     } else {
         return "";
@@ -365,7 +382,7 @@ async function GeneralQuiz() {
             Temp += `<option value="${cat}">${cati[localStorage.getItem("LangS")]}</option>`;
         }
     })
-    document.getElementById("container").innerHTML = Text + Temp + `</select><select id="nbmot" name="nbmot"><option ${SelectedOrNot3("all")}value="all">${DICOLANGtoSEE["All"]}</option><option ${SelectedOrNot3("25")}value="25">25 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("50")}value="50">50 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("100")}value="100">100 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("250")}value="250">250 ${DICOLANGtoSEE["Word"]}</option></select></div>`;
+    document.getElementById("container").innerHTML = Text + Temp + `</select><select id="nbmot" name="nbmot"><option ${SelectedOrNot3("all")}value="all">${DICOLANGtoSEE["All"]}</option><option ${SelectedOrNot3("25")}value="25">25 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("50")}value="50">50 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("100")}value="100">100 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("250")}value="250">250 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("other")}value="other">AUTRES</option></select></div>`;
     /*
     Temp = `<select id="voice" name="voice"><option ${SelectedOrNot2("son-f")}value="son-f">${DICOLANGtoSEE["Voice"]} 1</option><option ${SelectedOrNot2("son-h")}value="son-h">${DICOLANGtoSEE["Voice"]} 2</option></select>`;
     if (window.innerWidth > 1000) {

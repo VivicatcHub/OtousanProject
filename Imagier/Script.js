@@ -44,6 +44,12 @@ if (detectedKey2 === null) {
 var DICOLANGtoSEE = {};
 var DICOLANGtoTEACH = {};
 var SCORE = 0;
+var SCOREforRECORD = 0;
+var RECORDS = localStorage.getItem('RecordsImagier');
+if (RECORDS === null) {
+    RECORDS = "0,0,0";
+    localStorage.setItem('RecordsImagier', RECORDS);
+}
 
 async function RecupSheetDatas(ID, TITLE, RANGE) {
     try {
@@ -192,6 +198,7 @@ function Modif() {
     localStorage.setItem('Modif', MODIF);
     localStorage.setItem('Marathon', []);
     localStorage.setItem('MaraScore', 0);
+    localStorage.setItem('MaraHelp', 25);
     location.reload();
 }
 
@@ -328,7 +335,12 @@ function CreerListe(X, Y, DATA, CAT) {
         delete TempData[AleaKey];
         Result.push(AleaKey);
     }
-    return Result;
+    if (Result[0] === undefined) {
+        alert("Grille trop grande");
+        location.reload();
+    } else {
+        return Result;
+    }
 }
 
 function rgbToHex(RGB) {
@@ -358,6 +370,7 @@ function CreerGrille(Y, X, DATA, CAT) {
             let Nb = x * Y + y + 1;
             let Num = ValeurAleatoireListe(Liste);
             CASES.push(Num);
+            console.log(DATA, Num, Liste)
             if (DATA[Num]["Image"] === null || DATA[Num]["Image"] === undefined) {
                 switch (LANGUEtoSEE) {
                     case "fr-FR":
@@ -526,6 +539,20 @@ function Click(NB, NUM, X, Y, CAT) {
             document.getElementById("audioFin").play();
             var Text = DICORETURN["Langue"][Temp]["Fin"].replace('$', `${SCORE}`)
             alert(Text);
+            let Result = SCOREforRECORD - SCORE;
+            RECORDS = RECORDS.split(",")
+            switch(DIFF) {
+                case "1":
+                    RECORDS[0] = Math.max(RECORDS[0], Result);
+                    break;
+                case "4":
+                    RECORDS[1] = Math.max(RECORDS[1], Result);
+                    break;
+                case "10":
+                    RECORDS[2] = Math.max(RECORDS[2], Result);
+                    break;
+            }
+            localStorage.setItem("RecordsImagier", RECORDS);
         }
     } else {
         SCORE++;
@@ -609,6 +636,7 @@ function Launch() {
     DICOLANGtoTEACH = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === selectedOption)[0][1];
     X = document.getElementById("number-x").value;
     Y = document.getElementById("number-y").value;
+    SCOREforRECORD = parseInt(X) * parseInt(Y);
     let CAT = String(document.getElementById("catégorie").value);
     localStorage.setItem("Cat", CAT);
     // console.log(CAT);
@@ -715,7 +743,7 @@ async function general() {
             Temp2 += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
         }
     })
-    var Text = `<button class="jouer" id="jouer" onclick="Launch()">${DICOLANGtoSEE["Play"]}</button><div class="form-group"><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}"><div class="form-group"><select id="rep" name="rep"><option ${SelectedOrNot("1")}value="1">${DICOLANGtoSEE["Easy"]}</option><option ${SelectedOrNot("4")}value="4">${DICOLANGtoSEE["Medium"]}</option><option ${SelectedOrNot("10")}value="10">${DICOLANGtoSEE["Hard"]}</option></select>`;
+    var Text = `<button class="jouer" id="jouer" onclick="Launch()">${DICOLANGtoSEE["Play"]}</button><div class="form-group"><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}"><div class="form-group"><select id="rep" name="rep"><option ${SelectedOrNot("1")}value="10">${DICOLANGtoSEE["Easy"]}</option><option ${SelectedOrNot("4")}value="4">${DICOLANGtoSEE["Medium"]}</option><option ${SelectedOrNot("10")}value="1">${DICOLANGtoSEE["Hard"]}</option></select>`;
     Temp = `<select id="catégorie" name="catégorie"><option value="all">${DICOLANGtoSEE["All"]}</option>`;
     Object.keys(DICORETURN["Catégorie"]).forEach(cat => {
         let cati = DICORETURN["Catégorie"][cat];
