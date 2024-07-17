@@ -15,10 +15,10 @@
             <div class="name" id="Games">GAMES</div>
             <img src="https://th.bing.com/th/id/OIP.MXoRerPKuLj51SblpUrbmwHaE5?rs=1&pid=ImgDetMain" alt="Games">
         </a>
-        <a href="news.html" class="box">
-            <div class="name" id="News">GAMES</div>
-            <img src="https://img.freepik.com/vecteurs-premium/ensemble-journaux-illustration-aquarelle-stand-presse_534606-8.jpg?w=2000"
-                alt="News">
+        <a href="records.html" class="box">
+            <div class="name" id="Records">RECORDS</div>
+            <img src="https://th.bing.com/th/id/R.0aa714ec1276591f52cb5deb4f7117a5?rik=pq%2feinwaCiPUWw&pid=ImgRaw&r=0"
+                alt="Records">
         </a>
         <a href="Test/" class="box">
             <div class="name">Test</div>
@@ -33,7 +33,7 @@
         async function GeneralIndex() {
             DICORETURN = await DatasVictory(DATAS_RANGE);
             document.getElementById("Games").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Games"];
-            document.getElementById("News").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["News"];
+            document.getElementById("Records").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Records"];
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
             if (urlParams.get('webview') == "true") {

@@ -33,6 +33,11 @@ if (MARASCORE === null) {
     MARASCORE = 0;
     localStorage.setItem('MaraScore', MARASCORE);
 }
+var RECORDS = localStorage.getItem('RecordsQuiz');
+if (RECORDS === null) {
+    RECORDS = { "Easy": 0, "Medium": 0, "Hard": 0 };
+    localStorage.setItem('RecordsQuiz', RECORDS);
+}
 var DICORETURN = {};
 var VAL = "";
 var LISTEMOTS = [];
@@ -108,9 +113,21 @@ function ModifInputs(input) {
             console.log(LISTEMOTS, LISTEMOTS.length);
         } else {
             document.getElementById("audioFin").play();
-            alert(`Bravo, tu as trouvé ${parseInt(SCORE) + parseInt(MARASCORE)} mot(s)`);
+            let Result = parseInt(SCORE) + parseInt(MARASCORE)
+            alert(`Bravo, tu as trouvé ${Result} mot(s)`);
             document.getElementById("container").remove();
             document.getElementById("hiragana").remove();
+            switch(DIFF) {
+                case "1":
+                    RECORDS["Easy"] = Math.max(RECORDS["Easy"], Result);
+                    break;
+                case "4":
+                    RECORDS["Medium"] = Math.max(RECORDS["Medium"], Result);
+                    break;
+                case "10":
+                    RECORDS["Hard"] = Math.max(RECORDS["Hard"], Result);
+                    break;
+            }
         }
         if (DICORETURN["Mots"][VAL]["Image"] === null || DICORETURN["Mots"][VAL]["Image"] === undefined) {
             // console.log(DICORETURN["Mots"][VAL][DataToAff], DataToAff)

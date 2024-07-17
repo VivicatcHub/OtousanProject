@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OtousanProject - Records</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .Box {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .Box img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container" class="container">
+        <div class="Box">
+            <div class="name" id="Imagier">IMAGE FINDER</div><br>
+            Easy: 0<br>
+            Medium: 0<br>
+            Hard: 0
+        </div>
+        <div class="Box">
+            <div class="name" id="Quiz">QUIZ</div><br>
+            Easy: 0<br>
+            Medium: 0<br>
+            Hard: 0
+        </div>
+        <a href="index.html" class="Box">
+            <div class="name" id="Menu">MENU</div>
+            <img src="https://th.bing.com/th/id/R.f6e312b4679dde076da5446ada6ffa03?rik=xDyELxtDvKxaQQ&pid=ImgRaw&r=0"
+                alt="Menu">
+        </a>
+        <div class="Box">
+            <div class="name" id="Imagier">IMAGE FINDER</div><br>
+            Easy: 0<br>
+            Medium: 0<br>
+            Hard: 0
+        </div>
+        <div class="Box">
+            <div class="name" id="Quiz">QUIZ</div><br>
+            Easy: 0<br>
+            Medium: 0<br>
+            Hard: 0
+        </div>
+        <a href="index.html" class="Box">
+            <div class="name" id="Menu">MENU</div>
+            <img src="https://th.bing.com/th/id/R.f6e312b4679dde076da5446ada6ffa03?rik=xDyELxtDvKxaQQ&pid=ImgRaw&r=0"
+                alt="Menu">
+        </a>
+        <div class="Box">
+            <div class="name" id="Imagier">IMAGE FINDER</div><br>
+            Easy: 0<br>
+            Medium: 0<br>
+            Hard: 0
+        </div>
+        <div class="Box">
+            <div class="name" id="Quiz">QUIZ</div><br>
+            Easy: 0<br>
+            Medium: 0<br>
+            Hard: 0
+        </div>
+        <a href="index.html" class="Box">
+            <div class="name" id="Menu">MENU</div>
+            <img src="https://th.bing.com/th/id/R.f6e312b4679dde076da5446ada6ffa03?rik=xDyELxtDvKxaQQ&pid=ImgRaw&r=0"
+                alt="Menu">
+        </a>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const boxes = document.querySelectorAll('.Box');
+            const speed = 1;
+            const directions = Array.from({ length: boxes.length }, () => ({
+                x: Math.random() > 0.5 ? speed : -speed,
+                y: Math.random() > 0.5 ? speed : -speed
+            }));
+
+            function moveBoxes() {
+                boxes.forEach((box, index) => {
+                    let rect = box.getBoundingClientRect();
+
+                    // Move box
+                    let newX = rect.left + directions[index].x;
+                    let newY = rect.top + directions[index].y;
+
+                    // Check for collision with walls
+                    if (newX <= 0 || newX + rect.width >= window.innerWidth) {
+                        directions[index].x *= -1;
+                    }
+                    if (newY <= 0 || newY + rect.height >= window.innerHeight) {
+                        directions[index].y *= -1;
+                    }
+
+                    // Check for collision with other boxes
+                    boxes.forEach((otherBox, otherIndex) => {
+                        if (index !== otherIndex) {
+                            let otherRect = otherBox.getBoundingClientRect();
+                            if (
+                                rect.left < otherRect.right &&
+                                rect.right > otherRect.left &&
+                                rect.top < otherRect.bottom &&
+                                rect.bottom > otherRect.top
+                            ) {
+                                // Simple collision response: reverse direction
+                                directions[index].x *= -1;
+                                directions[index].y *= -1;
+                                directions[otherIndex].x *= -1;
+                                directions[otherIndex].y *= -1;
+                            }
+                        }
+                    });
+
+                    box.style.left = `${rect.left + directions[index].x}px`;
+                    box.style.top = `${rect.top + directions[index].y}px`;
+                });
+
+                requestAnimationFrame(moveBoxes);
+            }
+
+            boxes.forEach(box => {
+                box.style.left = `${Math.random() * (window.innerWidth - 100)}px`;
+                box.style.top = `${Math.random() * (window.innerHeight - 100)}px`;
+            });
+
+            moveBoxes();
+        });
+
+    </script>
+</body>
+
+</html>
