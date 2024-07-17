@@ -13,8 +13,7 @@
     <div id="container" class="container">
         <a href="Games/" class="box">
             <div class="name" id="Games">GAMES</div>
-            <img src="https://th.bing.com/th/id/OIP.MXoRerPKuLj51SblpUrbmwHaE5?rs=1&pid=ImgDetMain"
-                alt="Games">
+            <img src="https://th.bing.com/th/id/OIP.MXoRerPKuLj51SblpUrbmwHaE5?rs=1&pid=ImgDetMain" alt="Games">
         </a>
         <a href="news.html" class="box">
             <div class="name" id="News">GAMES</div>
@@ -35,6 +34,14 @@
             DICORETURN = await DatasVictory(DATAS_RANGE);
             document.getElementById("Games").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Games"];
             document.getElementById("News").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["News"];
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            if (urlParams.get('webview') == "true") {
+                localStorage.setItem("WebView", "true");
+            } else {
+                localStorage.setItem("WebView", "false");
+
+            }
         }
 
         GeneralIndex();

@@ -45,18 +45,17 @@ function JapOrNot() {
         if (DICORETURN["Mots"][VAL]["Kanji"] !== undefined) {
             return ` (${DICORETURN["Mots"][VAL]["Kanji"]})`;
         }
-    } else {
-        return "";
     }
+    return "";
 }
 
-document.getElementById('hiragana').addEventListener('focus', function() {
-    if (md.mobile()) {
+document.getElementById('hiragana').addEventListener('focus', function () {
+    if (md.mobile() && localStorage.getItem("WebView") == "true") {
         document.body.classList.add('open');
     }
 });
 
-document.getElementById('hiragana').addEventListener('blur', function() {
+document.getElementById('hiragana').addEventListener('blur', function () {
     document.body.classList.remove('open');
 });
 
@@ -99,7 +98,7 @@ function ModifInputs(input) {
             console.log(LISTEMOTS, LISTEMOTS.length);
         } else {
             document.getElementById("audioFin").play();
-            alert(`Bravo, tu as trouvé ${SCORE + MARASCORE} mot(s)`);
+            alert(`Bravo, tu as trouvé ${parseInt(SCORE) + parseInt(MARASCORE)} mot(s)`);
             document.getElementById("container").remove();
             document.getElementById("hiragana").remove();
         }
@@ -144,10 +143,10 @@ function CreerListeMots() {
         if (CAT === "all") {
             var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
         } else {
-            var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null && value["Catégorie"] == CAT).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
+            var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null && InCateg(CAT, value)).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
         }
         let Len = parseInt(NBMOTS !== "all" ? NBMOTS : Object.keys(Liste).length);
-        console.log(Liste, Len);
+        // console.log(Liste, Len);
         for (let i = 0; i < Len; i++) {
             let Temp = ValeurAleatoireDico(Liste);
             delete Liste[Temp];
@@ -157,7 +156,20 @@ function CreerListeMots() {
     } else {
         LISTEMOTS = MARATHON.split(",");
     }
-    console.log(LISTEMOTS);
+    // console.log(LISTEMOTS);
+}
+
+function InCateg(CATEGORIE, VALUE) {
+    // console.log(CATEGORIE, VALUE);
+    if (VALUE["Catégorie"] !== undefined) {
+        if (String(VALUE["Catégorie"]).split(",").includes(CATEGORIE) && !String(VALUE["Catégorie"]).split(",").includes("-1")) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
 }
 
 function HelpRes() {
@@ -245,12 +257,12 @@ function Launch() {
     localStorage.setItem("Cat", CAT)
     LANGUEtoTEACH = document.getElementById("language2").value;
     localStorage.setItem('LangT', LANGUEtoTEACH);
-    console.log(localStorage.getItem("LangT"));
+    // console.log(localStorage.getItem("LangT"));
     document.getElementById("container").classList = "containerB";
     CreerListeMots();
     VAL = LISTEMOTS[0];
     LISTEMOTS = LISTEMOTS.slice(1);
-    console.log(DICORETURN["Mots"][VAL], VAL);
+    // console.log(DICORETURN["Mots"][VAL], VAL);
     if (DICORETURN["Mots"][VAL]["Image"] === null || DICORETURN["Mots"][VAL]["Image"] === undefined) {
         switch (LANGUEtoSEE) {
             case "fr-FR":
