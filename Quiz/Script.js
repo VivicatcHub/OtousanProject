@@ -155,7 +155,7 @@ function CreerListeMots() {
         } else {
             var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null && InCateg(CAT, value)).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
         }
-        let Len = parseInt(NBMOTS !== "all" ? NBMOTS : Object.keys(Liste).length);
+        let Len = parseInt(NBMOTS !== "all" ? Math.min(NBMOTS, Object.keys(Liste).length) : Object.keys(Liste).length);
         // console.log(Liste, Len);
         for (let i = 0; i < Len; i++) {
             let Temp = ValeurAleatoireDico(Liste);
