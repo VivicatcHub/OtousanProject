@@ -92,7 +92,7 @@ function ModifInputs(input) {
             var DataToAff = "Mot";
             break;
         case "jp-JP":
-            if (DICORETURN["Mots"][VAL]["Kanji"] !== undefined) {
+            if (DICORETURN["Mots"][VAL]["Kanji"] !== undefined && DICORETURN["Mots"][VAL]["Kanji"] !== null) {
                 var DataToAff = "Kanji";
             } else {
                 var DataToAff = "Hiragana";
@@ -110,7 +110,7 @@ function ModifInputs(input) {
         if (LISTEMOTS.length >= 1) {
             VAL = LISTEMOTS[0];
             LISTEMOTS = LISTEMOTS.slice(1);
-            console.log(LISTEMOTS, LISTEMOTS.length);
+            // console.log(LISTEMOTS, LISTEMOTS.length);
         } else {
             document.getElementById("audioFin").play();
             let Result = parseInt(SCORE) + parseInt(MARASCORE);
@@ -132,8 +132,24 @@ function ModifInputs(input) {
             localStorage.setItem("RecordsQuiz", RECORDS);
             // console.log(RECORDS);
         }
+        switch (LANGUEtoSEE) {
+            case "fr-FR":
+                var DataToAff = "Mot";
+                break;
+            case "jp-JP":
+                if (DICORETURN["Mots"][VAL]["Kanji"] !== undefined && DICORETURN["Mots"][VAL]["Kanji"] !== null) {
+                    var DataToAff = "Kanji";
+                } else {
+                    var DataToAff = "Hiragana";
+                }
+                break;
+            default:
+                var DataToAff = LANGUEtoSEE;
+                break;
+    
+        }
         if (DICORETURN["Mots"][VAL]["Image"] === null || DICORETURN["Mots"][VAL]["Image"] === undefined) {
-            // console.log(DICORETURN["Mots"][VAL][DataToAff], DataToAff)
+            console.log(DICORETURN["Mots"][VAL], DataToAff);
             document.getElementById("container").innerHTML = `<button disabled class="button-grille-quiz"><p class="p-grille-quiz">${DICORETURN["Mots"][VAL][DataToAff].toUpperCase()}</p></button>`;
         } else {
             document.getElementById("container").innerHTML = `<button disabled class="button-grille-quiz"><img class="img-grille-quiz" src="${DICORETURN["Mots"][VAL]["Image"]}"></img></button>`;
@@ -210,6 +226,7 @@ function Block() {
 }
 
 function Help() {
+    console.log(HELPRES);
     switch (LANGUEtoTEACH) {
         case "fr-FR":
             var Temp = "Mot";
@@ -223,7 +240,7 @@ function Help() {
     }
     if (HELPRES > 0 || HELPRES === "all") {
         alert(DICORETURN["Mots"][VAL][Temp]);
-        HELPRES--;
+        if (HELPRES !== "all") { HELPRES-- };
         document.getElementById("RepRes").innerHTML = `${DICOLANGtoSEE["Left"]}:<br>${HelpRes()}`;
     }
     Block();
@@ -243,9 +260,9 @@ function HelpAudio(SEXE) {
     }
     let Text = DICORETURN["Mots"][VAL][Temp];
     if (SEXE === "h") {
-        SpeakTextH(Text);
+        SpeakTextH(Text, "LangT");
     } else {
-        SpeakTextF(Text);
+        SpeakTextF(Text, "LangT");
     }
     HELPRES--;
     document.getElementById("RepRes").innerHTML = `${DICOLANGtoSEE["Left"]}:<br>${HelpRes()}`;

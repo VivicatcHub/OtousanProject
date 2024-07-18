@@ -208,7 +208,7 @@ function Modif() {
     location.reload();
 }
 
-function SpeakTextH(TEXT) {
+function SpeakTextH(TEXT, LANG) {
     /*
     var rate = 0.8;
     var msg = new SpeechSynthesisUtterance();
@@ -218,11 +218,11 @@ function SpeakTextH(TEXT) {
 
     // Utiliser la synthèse vocale pour lire le texte
     window.speechSynthesis.speak(msg);*/
-    responsiveVoice.speak(TEXT, `${DICOLANGtoTEACH["Nom"]} Male`);
+    responsiveVoice.speak(TEXT, `${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem(LANG))[0][1]["Nom"]} Male`);
 }
 
-function SpeakTextF(TEXT) {
-    responsiveVoice.speak(TEXT, `${DICOLANGtoTEACH["Nom"]} Female`);
+function SpeakTextF(TEXT, LANG) {
+    responsiveVoice.speak(TEXT, `${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem(LANG))[0][1]["Nom"]} Female`);
 }
 
 function ValeurAleatoireDico(DATA) {
@@ -419,11 +419,11 @@ function CreerGrille(Y, X, DATA, CAT) {
 function adjustFontSize() {
     textFit(document.querySelectorAll(".p-grille, .adj"), {
         alignHoriz: true,
-        alignVert: true,
+        alignVert: false,
         multiLine: true,
         detectMultiLine: true,
-        maxFontSize: 20,
-        minFontSize: 6
+        maxFontSize: 100,
+        minFontSize: 10
     });
     if (window.innerWidth > 650) {
         textFit(document.querySelectorAll(".p-grille-quiz"), {
@@ -440,7 +440,7 @@ function adjustFontSize() {
             alignVert: true,
             multiLine: true,
             detectMultiLine: false,
-            maxFontSize: 20,
+            maxFontSize: 30,
             minFontSize: 6
         });
     }
@@ -494,23 +494,23 @@ function Click(NB, NUM, X, Y, CAT) {
             switch (LANGUEtoTEACH) {
                 case "fr-FR":
                     if (VOICE === "son-f") {
-                        SpeakTextF(DICORETURN["Mots"][PLAY]["Mot"]);
+                        SpeakTextF(DICORETURN["Mots"][PLAY]["Mot"], "LangT");
                     } else {
-                        SpeakTextH(DICORETURN["Mots"][PLAY]["Mot"]);
+                        SpeakTextH(DICORETURN["Mots"][PLAY]["Mot"], "LangT");
                     }
                     break;
                 case "jp-JP":
                     if (VOICE === "son-f") {
-                        SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+                        SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"], "LangT");
                     } else {
-                        SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
+                        SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"], "LangT");
                     }
                     break;
                 default:
                     if (VOICE === "son-f") {
-                        SpeakTextF(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
+                        SpeakTextF(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], "LangT");
                     } else {
-                        SpeakTextH(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
+                        SpeakTextH(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], "LangT");
                     }
                     break;
 
@@ -518,13 +518,13 @@ function Click(NB, NUM, X, Y, CAT) {
             document.getElementById('son-h').onclick = function () {
                 switch (LANGUEtoTEACH) {
                     case "fr-FR":
-                        SpeakTextH(DICORETURN["Mots"][PLAY]["Mot"]);
+                        SpeakTextH(DICORETURN["Mots"][PLAY]["Mot"], "LangT");
                         break;
                     case "jp-JP":
-                        SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
+                        SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"], "LangT");
                         break;
                     default:
-                        SpeakTextH(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
+                        SpeakTextH(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], "LangT");
                         break;
 
                 }
@@ -532,13 +532,13 @@ function Click(NB, NUM, X, Y, CAT) {
             document.getElementById('son-f').onclick = function () {
                 switch (LANGUEtoTEACH) {
                     case "fr-FR":
-                        SpeakTextF(DICORETURN["Mots"][PLAY]["Mot"]);
+                        SpeakTextF(DICORETURN["Mots"][PLAY]["Mot"], "LangT");
                         break;
                     case "jp-JP":
-                        SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+                        SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"], "LangT");
                         break;
                     default:
-                        SpeakTextF(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
+                        SpeakTextF(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], "LangT");
                         break;
 
                 }
@@ -666,13 +666,13 @@ function Launch() {
         // console.log(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], LANGUEtoTEACH) 
         switch (LANGUEtoTEACH) {
             case "fr-FR":
-                SpeakTextH(DICORETURN["Mots"][PLAY]["Mot"]);
+                SpeakTextH(DICORETURN["Mots"][PLAY]["Mot"], "LangT");
                 break;
             case "jp-JP":
-                SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"]);
+                SpeakTextH(DICORETURN["Mots"][PLAY]["Hiragana"], "LangT");
                 break;
             default:
-                SpeakTextH(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
+                SpeakTextH(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], "LangT");
                 break;
 
         }
@@ -681,13 +681,13 @@ function Launch() {
         // console.log(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], LANGUEtoTEACH)
         switch (LANGUEtoTEACH) {
             case "fr-FR":
-                SpeakTextF(DICORETURN["Mots"][PLAY]["Mot"]);
+                SpeakTextF(DICORETURN["Mots"][PLAY]["Mot"], "LangT");
                 break;
             case "jp-JP":
-                SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"]);
+                SpeakTextF(DICORETURN["Mots"][PLAY]["Hiragana"], "LangT");
                 break;
             default:
-                SpeakTextF(DICORETURN["Mots"][PLAY][LANGUEtoTEACH]);
+                SpeakTextF(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], "LangT");
                 break;
 
         }
