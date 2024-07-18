@@ -386,7 +386,7 @@ function CreerGrille(Y, X, DATA, CAT) {
             let Nb = x * Y + y + 1;
             let Num = ValeurAleatoireListe(Liste);
             CASES.push(Num);
-            console.log(DATA, Num, Liste)
+            // console.log(DATA, Num, Liste)
             if (DATA[Num]["Image"] === null || DATA[Num]["Image"] === undefined) {
                 switch (LANGUEtoSEE) {
                     case "fr-FR":
@@ -417,31 +417,43 @@ function CreerGrille(Y, X, DATA, CAT) {
 }
 
 function adjustFontSize() {
-    textFit(document.querySelectorAll(".p-grille, .adj"), {
+    textFit(document.querySelectorAll(".p-grille"), {
         alignHoriz: true,
-        alignVert: false,
+        alignVert: true,
         multiLine: true,
         detectMultiLine: true,
-        maxFontSize: 100,
-        minFontSize: 10
+        maxFontSize: 15,
+        minFontSize: 8,
+        widthOnly: false,
+    });
+    textFit(document.querySelectorAll(".adj"), {
+        alignHoriz: true,
+        alignVert: true,
+        multiLine: true,
+        detectMultiLine: true,
+        maxFontSize: 15,
+        minFontSize: 8,
+        widthOnly: false,
     });
     if (window.innerWidth > 650) {
         textFit(document.querySelectorAll(".p-grille-quiz"), {
             alignHoriz: true,
             alignVert: true,
             multiLine: true,
-            detectMultiLine: false,
-            maxFontSize: 100,
-            minFontSize: 6
+            detectMultiLine: true,
+            maxFontSize: 20,
+            minFontSize: 10,
+            widthOnly: false,
         });
     } else {
         textFit(document.querySelectorAll(".p-grille-quiz"), {
             alignHoriz: true,
             alignVert: true,
             multiLine: true,
-            detectMultiLine: false,
-            maxFontSize: 30,
-            minFontSize: 6
+            detectMultiLine: true,
+            maxFontSize: 15,
+            minFontSize: 8,
+            widthOnly: false,
         });
     }
 }
@@ -636,8 +648,8 @@ function Click(NB, NUM, X, Y, CAT) {
                 break;
             }
         }
-        adjustFontSize();
     }
+    adjustFontSize();
 }
 
 function Retry() {
@@ -661,7 +673,7 @@ function Launch() {
     // console.log(CAT);
     document.getElementById('container').innerHTML = CreerGrille(X, Y, DICORETURN["Mots"], CAT);
     PLAY = ValeurAleatoireListe(CASES);
-    document.getElementById("containerD").innerHTML = `<div class="containerB"><button id="son-f"><img src="../speaker_f.png" alt="JOUER"></img></button><p id="wtf" class="adj"></p><button id="son-h"><img src="../speaker_h.png" alt="JOUER"></img></button></div><button class="adj" id="retry" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
+    document.getElementById("containerD").innerHTML = `<div class="containerB"><button id="son-f"><img src="../speaker_f.png" alt="JOUER"></img></button><p id="wtf" style="width: 150px; height: 100px;" class="adj"></p><button id="son-h"><img src="../speaker_h.png" alt="JOUER"></img></button></div><button class="adj" style="width: 100px; height: 50px;" id="retry" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
     document.getElementById('son-h').onclick = function () {
         // console.log(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], LANGUEtoTEACH) 
         switch (LANGUEtoTEACH) {
