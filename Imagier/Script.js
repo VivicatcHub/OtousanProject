@@ -8,7 +8,7 @@ var PLAY = 0;
 var DICORETURN = {};
 var LANGUEtoSEE = localStorage.getItem('LangS');
 if (LANGUEtoSEE === null) {
-    LANGUEtoSEE = "en-EN";
+    LANGUEtoSEE = null;
     localStorage.setItem('LangS', LANGUEtoSEE);
 }
 var LANGUEtoTEACH = localStorage.getItem('LangT');
@@ -199,6 +199,12 @@ function Modif() {
     localStorage.setItem('Marathon', []);
     localStorage.setItem('MaraScore', 0);
     localStorage.setItem('MaraHelp', 25);
+    console.log(Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Inverse"]);
+    if (Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Inverse"] == true) {
+        alert(`${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Modified"]}${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Data"]}!`);
+    } else {
+        alert(`${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Data"]} ${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Modified"]} !`);
+    }
     location.reload();
 }
 
@@ -281,6 +287,19 @@ function SameWord(KEY, RESULT) {
     return false;
 }
 
+function InCateg(CATEGORIE, VALUE) {
+    // console.log(CATEGORIE, VALUE);
+    if (VALUE["Catégorie"] !== undefined) {
+        if (String(VALUE["Catégorie"]).split(",").includes(CATEGORIE) && (CATEGORIE !== "all" && !String(VALUE["Catégorie"]).split(",").includes("-1"))) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
 function CreerListe(X, Y, DATA, CAT) {
     var Result = [];
     let Nb = (X * Y) / 2;
@@ -309,13 +328,9 @@ function CreerListe(X, Y, DATA, CAT) {
             break;
     }
     if (CAT === "all") {
-        var TempData = Object.entries(DATA)
-            .filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null).reduce((acc, [key, value]) => {
-                acc[key] = value;
-                return acc;
-            }, {});
+        var TempData = Object.entries(DATA).filter(([key, value]) => !InCateg("-1", value) && value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
     } else {
-        var TempData = Object.fromEntries(Object.entries(DATA).filter(([key, value]) => value["Catégorie"] === parseInt(CAT) && value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null));
+        var TempData = Object.entries(DATA).filter(([key, value]) => InCateg(CAT, value) && value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
     }
     let Len = Object.keys(TempData).length;
     // console.log(Nb, Len, Rep)
@@ -336,6 +351,7 @@ function CreerListe(X, Y, DATA, CAT) {
         Result.push(AleaKey);
     }
     if (Result[0] === undefined) {
+        console.log(TempData);
         alert("Grille trop grande");
         location.reload();
     } else {
@@ -401,11 +417,11 @@ function CreerGrille(Y, X, DATA, CAT) {
 }
 
 function adjustFontSize() {
-    textFit(document.querySelectorAll(".p-grille"), {
+    textFit(document.querySelectorAll(".p-grille, .adj"), {
         alignHoriz: true,
         alignVert: true,
         multiLine: true,
-        detectMultiLine: false,
+        detectMultiLine: true,
         maxFontSize: 20,
         minFontSize: 6
     });
@@ -428,17 +444,9 @@ function adjustFontSize() {
             minFontSize: 6
         });
     }
-    textFit(document.querySelectorAll(".adj"), {
-        alignHoriz: true,
-        alignVert: true,
-        multiLine: true,
-        detectMultiLine: false,
-        maxFontSize: 100,
-        minFontSize: 6
-    });
 }
 
-window.onload = adjustFontSize;
+//window.onload = adjustFontSize;
 window.onresize = adjustFontSize;
 
 
@@ -465,13 +473,24 @@ function Click(NB, NUM, X, Y, CAT) {
                 var Temp = DICORETURN["Mots"][PLAY][LANGUEtoTEACH];
                 break;
         }
+        switch (LANGUEtoSEE) {
+            case "jp-JP":
+                var Temp2 = DICORETURN["Mots"][PLAY]["Hiragana"] + IfIsntUndefined(DICORETURN["Mots"][PLAY]["Kanji"]);
+                break;
+            case "fr-FR":
+                var Temp2 = DICORETURN["Mots"][PLAY]["Mot"];
+                break;
+            default:
+                var Temp2 = DICORETURN["Mots"][PLAY][LANGUEtoSEE];
+                break;
+        }
         let as = document.getElementById(String(NB));
-        document.getElementById('wtf').innerHTML = DICORETURN["Mots"][PLAY]["Mot"] + (LANGUEtoSEE !== LANGUEtoTEACH ? "<br>" + Temp : "");
+        document.getElementById('wtf').innerHTML = Temp2 + (LANGUEtoSEE !== LANGUEtoTEACH ? "<br>" + Temp : "");
         as.style.visibility = "hidden";
         SupprimerValeurListe(CASES, String(NUM));
         if (CASES.length >= 1) {
             PLAY = ValeurAleatoireListe(CASES);
-            // console.log(CASES, PLAY)
+            // console.log(CASES, PLAY);
             switch (LANGUEtoTEACH) {
                 case "fr-FR":
                     if (VOICE === "son-f") {
@@ -642,7 +661,7 @@ function Launch() {
     // console.log(CAT);
     document.getElementById('container').innerHTML = CreerGrille(X, Y, DICORETURN["Mots"], CAT);
     PLAY = ValeurAleatoireListe(CASES);
-    document.getElementById("containerD").innerHTML = `<div class="containerB"><button id="son-f"><img src="../speaker_f.png" alt="JOUER"></img></button><p id="wtf"></p><button id="son-h"><img src="../speaker_h.png" alt="JOUER"></img></button></div><button class="adj" id="retry" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
+    document.getElementById("containerD").innerHTML = `<div class="containerB"><button id="son-f"><img src="../speaker_f.png" alt="JOUER"></img></button><p id="wtf" class="adj"></p><button id="son-h"><img src="../speaker_h.png" alt="JOUER"></img></button></div><button class="adj" id="retry" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
     document.getElementById('son-h').onclick = function () {
         // console.log(DICORETURN["Mots"][PLAY][LANGUEtoTEACH], LANGUEtoTEACH) 
         switch (LANGUEtoTEACH) {
@@ -743,7 +762,7 @@ async function general() {
             Temp2 += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
         }
     })
-    var Text = `<button class="jouer" id="jouer" onclick="Launch()">${DICOLANGtoSEE["Play"]}</button><div class="form-group"><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}"><div class="form-group"><select id="rep" name="rep"><option ${SelectedOrNot("1")}value="10">${DICOLANGtoSEE["Easy"]}</option><option ${SelectedOrNot("4")}value="4">${DICOLANGtoSEE["Medium"]}</option><option ${SelectedOrNot("10")}value="1">${DICOLANGtoSEE["Hard"]}</option></select>`;
+    var Text = `<button class="jouer" id="jouer" onclick="Launch()">${DICOLANGtoSEE["Play"]}</button><div class="form-group"><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}"><div class="form-group"><select id="rep" name="rep"><option ${SelectedOrNot("10")}value="10">${DICOLANGtoSEE["Easy"]}</option><option ${SelectedOrNot("4")}value="4">${DICOLANGtoSEE["Medium"]}</option><option ${SelectedOrNot("1")}value="1">${DICOLANGtoSEE["Hard"]}</option></select>`;
     Temp = `<select id="catégorie" name="catégorie"><option value="all">${DICOLANGtoSEE["All"]}</option>`;
     Object.keys(DICORETURN["Catégorie"]).forEach(cat => {
         let cati = DICORETURN["Catégorie"][cat];
@@ -762,6 +781,7 @@ async function general() {
     document.getElementById("container2").innerHTML = Temp;
     let obj = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1];
     document.getElementById("modifier").innerHTML = obj["Modify"];
+    document.getElementById("menu").innerHTML = `<a href="../Games/">${obj["Menu"]}</a>`;
     if (window.innerWidth > 1000) {
         document.getElementById('keyInput').addEventListener('keydown', function (event) {
             detectedKey = event.key;

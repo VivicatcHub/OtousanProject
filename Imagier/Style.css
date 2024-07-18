@@ -86,6 +86,11 @@ body {
     /* Couleur de fond au survol */
 }
 
+a  {
+    text-decoration: none; 
+    color: white;
+}
+
 /* Style pour .container */
 .container {
     display: flex;

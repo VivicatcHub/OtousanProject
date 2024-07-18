@@ -92,7 +92,7 @@ function ModifInputs(input) {
             var DataToAff = "Mot";
             break;
         case "jp-JP":
-            if (DATA[Num]["Kanji"] !== undefined) {
+            if (DICORETURN["Mots"][VAL]["Kanji"] !== undefined) {
                 var DataToAff = "Kanji";
             } else {
                 var DataToAff = "Hiragana";
@@ -142,6 +142,21 @@ function ModifInputs(input) {
     }
 }
 
+function LangueToSee(VALUE) {
+    switch (LANGUEtoSEE) {
+        case "fr-FR":
+            return "Mot";
+        case "jp-JP":
+            if (VALUE["Kanji"] !== undefined) {
+                return "Kanji";
+            } else {
+                return "Hiragana";
+            }
+        default:
+            return LANGUEtoSEE;
+    }
+}
+
 function CreerListeMots() {
     if (MARATHON.length === 0) {
         switch (LANGUEtoTEACH) {
@@ -155,25 +170,10 @@ function CreerListeMots() {
                 var Temp = LANGUEtoTEACH;
                 break;
         }
-        switch (LANGUEtoSEE) {
-            case "fr-FR":
-                var Temp2 = "Mot";
-                break;
-            case "jp-JP":
-                if (DATA[Num]["Kanji"] !== undefined) {
-                    var Temp2 = "Kanji";
-                } else {
-                    var Temp2 = "Hiragana";
-                }
-                break;
-            default:
-                var Temp2 = LANGUEtoSEE;
-                break;
-        }
         if (CAT === "all") {
-            var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
+            var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && LangueToSee(value) !== undefined && LangueToSee(value) !== null).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
         } else {
-            var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[Temp2] !== undefined && value[Temp2] !== null && InCateg(CAT, value)).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
+            var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && LangueToSee(value) !== undefined && LangueToSee(value) !== null && InCateg(CAT, value)).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
         }
         let Len = parseInt(NBMOTS !== "all" ? Math.min(NBMOTS, Object.keys(Liste).length) : Object.keys(Liste).length);
         // console.log(Liste, Len);
@@ -183,23 +183,11 @@ function CreerListeMots() {
             LISTEMOTS.push(Temp);
             // console.log(Temp, Object.keys(Liste).length, i);
         }
+
     } else {
         LISTEMOTS = MARATHON.split(",");
     }
     // console.log(LISTEMOTS);
-}
-
-function InCateg(CATEGORIE, VALUE) {
-    // console.log(CATEGORIE, VALUE);
-    if (VALUE["Catégorie"] !== undefined) {
-        if (String(VALUE["Catégorie"]).split(",").includes(CATEGORIE) && !String(VALUE["Catégorie"]).split(",").includes("-1")) {
-            return true;
-        } else {
-            return false;
-        }
-    } else {
-        return false;
-    }
 }
 
 function HelpRes() {
@@ -311,7 +299,7 @@ function Launch() {
                 var DataToAff = "Mot";
                 break;
             case "jp-JP":
-                if (DATA[Num]["Kanji"] !== undefined) {
+                if (DICORETURN["Mots"][VAL]["Kanji"] !== undefined) {
                     var DataToAff = "Kanji";
                 } else {
                     var DataToAff = "Hiragana";

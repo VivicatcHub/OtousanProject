@@ -15,25 +15,73 @@
             <div class="name" id="Games">GAMES</div>
             <img src="https://th.bing.com/th/id/OIP.MXoRerPKuLj51SblpUrbmwHaE5?rs=1&pid=ImgDetMain" alt="Games">
         </a>
-        <a href="records.html" class="box">
+        <a href="Records/" class="box">
             <div class="name" id="Records">RECORDS</div>
             <img src="https://th.bing.com/th/id/R.0aa714ec1276591f52cb5deb4f7117a5?rik=pq%2feinwaCiPUWw&pid=ImgRaw&r=0"
                 alt="Records">
         </a>
+        <button onclick="Language()" class="box">
+            <div class="name" id="Language">LANGUAGE</div>
+            <img src="https://th.bing.com/th/id/R.0413359ff7b11252292c74483fbb6047?rik=yoJCVhls4W2TzQ&pid=ImgRaw&r=0"
+                alt="Language">
+        </button>
+        <button onclick="Modif()" class="box">
+            <div class="name" id="Modify">UPDATE</div>
+            <img src="https://static.vecteezy.com/system/resources/previews/000/635/455/original/system-updates-programmers-updating-operation-flat-vector-illustration.jpg"
+                alt="Modify">
+        </button>
         <a href="Test/" class="box">
             <div class="name">Test</div>
             <img src="https://th.bing.com/th/id/OIP.dmFG8cHtySaVAp9evFw_HwHaEF?w=336&h=185&c=7&r=0&o=5&pid=1.7"
                 alt="Test">
         </a>
     </div>
+    <div id="overlay"></div>
+    <div id="modal"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/textfit/2.4.0/textFit.js"></script>
     <script src="Data.js"></script>
     <script src="Imagier/Script.js"></script>
     <script>
+        function Language() {
+            const overlay = document.getElementById('overlay');
+            const modal = document.getElementById('modal');
+            // Show the modal and overlay
+            function showModal() {
+                overlay.style.display = 'block';
+                var Temp = '<select id="dropdown">';
+                Object.keys(DICORETURN["Langue"]).forEach(key => {
+                    cle = DICORETURN["Langue"][key];
+                    console.log(cle, cle["Langue"])
+                    Temp += `<option value="${cle["Langue"]}">${cle[cle["Langue"]]} ${cle["Langue"]}</option>`;
+                });
+                modal.innerHTML = Temp + "</select><button id='submit'>OK</button>";
+                const submitButton = document.getElementById('submit');
+                modal.style.display = 'block';
+                // Hide the modal when the submit button is clicked
+                submitButton.addEventListener('click', function () {
+                    hideModal();
+                });
+            }
+            // Hide the modal and overlay
+            function hideModal() {
+                overlay.style.display = 'none';
+                modal.style.display = 'none';
+                localStorage.setItem("LangS", document.getElementById("dropdown").value);
+                location.reload();
+            }
+            // Show the modal on page load
+            showModal();
+        }
+
         async function GeneralIndex() {
             DICORETURN = await DatasVictory(DATAS_RANGE);
+            if (localStorage.getItem("LangS") === "null" || localStorage.getItem("LangS") === undefined) {
+                Language();
+            }
             document.getElementById("Games").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Games"];
             document.getElementById("Records").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Records"];
+            document.getElementById("Language").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Language"];
+            document.getElementById("Modify").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Modify"];
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
             if (urlParams.get('webview') == "true") {
