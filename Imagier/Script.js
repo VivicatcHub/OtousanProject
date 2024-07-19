@@ -100,7 +100,7 @@ async function DatasVictory(DATAS) {
             });
             await Promise.all(promises); // Attendre que toutes les promesses se terminent
             console.log("DICO:", Dico);
-            var Request = indexedDB.open(`MaBaseDeDonnees${GAME}`, I);
+            var Request = indexedDB.open(`MaBaseDeDonneesMamonakuGames`, I);
 
             Request.onupgradeneeded = function (event) {
                 var Db = event.target.result;
@@ -139,7 +139,7 @@ async function DatasVictory(DATAS) {
         var Dico = {};
         try {
             var Promesse = new Promise(function (Resolve, Reject) {
-                var Request = indexedDB.open(`MaBaseDeDonnees${GAME}`, I);
+                var Request = indexedDB.open(`MaBaseDeDonneesMamonakuGames`, I);
 
                 Request.onsuccess = function (event) {
                     var Db = event.target.result; // Obtention de la référence à la base de données ouverte
