@@ -441,7 +441,7 @@ function adjustFontSize() {
             alignVert: true,
             multiLine: true,
             detectMultiLine: true,
-            maxFontSize: 20,
+            maxFontSize: 50,
             minFontSize: 10,
             widthOnly: false,
         });
@@ -451,8 +451,8 @@ function adjustFontSize() {
             alignVert: true,
             multiLine: true,
             detectMultiLine: true,
-            maxFontSize: 15,
-            minFontSize: 8,
+            maxFontSize: 30,
+            minFontSize: 10,
             widthOnly: false,
         });
     }
