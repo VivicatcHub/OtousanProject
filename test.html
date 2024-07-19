@@ -1,98 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Déroulant</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            z-index: 10;
-            display: none;
-        }
-
-        #modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
-            z-index: 20;
-            display: none;
-        }
-
-        #dropdown {
-            margin-bottom: 10px;
-            width: 100%;
-        }
-
-        #submit {
-            width: 100%;
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        #submit:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <title>Menu déroulant à choix multiple</title>
 </head>
 
 <body>
-    <div id="overlay"></div>
-    <div id="modal">
-        <select id="dropdown">
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-        </select>
-        <button id="submit">Envoyer</button>
-    </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const overlay = document.getElementById('overlay');
-            const modal = document.getElementById('modal');
-            const submitButton = document.getElementById('submit');
-
-            // Show the modal and overlay
-            function showModal() {
-                overlay.style.display = 'block';
-                modal.style.display = 'block';
-            }
-
-            // Hide the modal and overlay
-            function hideModal() {
-                overlay.style.display = 'none';
-                modal.style.display = 'none';
-            }
-
-            // Show the modal on page load
-            showModal();
-
-            // Hide the modal when the submit button is clicked
-            submitButton.addEventListener('click', function () {
-                hideModal();
-            });
-        });
-
-    </script>
+    <h1>Choisissez vos fruits préférés</h1>
+    <form>
+        <div class="custom-select">
+            <select id="fruits" name="fruits" multiple size="5">
+                <option value="pomme">Pomme</option>
+                <option value="banane">Banane</option>
+                <option value="orange">Orange</option>
+                <option value="mangue">Mangue</option>
+                <option value="kiwi">Kiwi</option>
+            </select>
+        </div>
+    </form>
 </body>
 
 </html>

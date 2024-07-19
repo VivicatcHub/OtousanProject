@@ -264,7 +264,7 @@ function HelpAudio(SEXE) {
     } else {
         SpeakTextF(Text, "LangT");
     }
-    HELPRES--;
+    if (HELPRES !== "all") { HELPRES-- };
     document.getElementById("RepRes").innerHTML = `${DICOLANGtoSEE["Left"]}:<br>${HelpRes()}`;
     if (HELPRES === 0 && DIFF !== "1") {
         document.getElementById("help").disabled = true;
