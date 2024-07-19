@@ -293,7 +293,7 @@ function Launch() {
     DIFF = document.getElementById("rep").value;
     if (DIFF === "4") {
         HELPRES = Math.min(25, parseInt(localStorage.getItem("MaraHelp")));
-    } else {
+    } else if (DIFF !== "1") {
         HELPRES = Math.min(5, parseInt(localStorage.getItem("MaraHelp")));
     }
     localStorage.setItem("Diff", DIFF)
