@@ -291,9 +291,11 @@ function Launch() {
         NBMOTS = parseInt(userInput);
     }
     DIFF = document.getElementById("rep").value;
-    if (DIFF === "4") {
+    if (DIFF === "1") {
+        HELPRES = "all";    
+    } else if (DIFF === "4") {
         HELPRES = Math.min(25, parseInt(localStorage.getItem("MaraHelp")));
-    } else if (DIFF !== "1") {
+    } else {
         HELPRES = Math.min(5, parseInt(localStorage.getItem("MaraHelp")));
     }
     localStorage.setItem("Diff", DIFF)
