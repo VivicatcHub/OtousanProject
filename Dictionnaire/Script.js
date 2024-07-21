@@ -21,7 +21,7 @@ function Info(NUM) {
                 if (Data["Hiragana"] !== null && Data["Hiragana"] !== undefined) {
                     Text += Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === LANGUEtoSEE)[0][1][Lan["Langue"]] + ":<br>";
                     Text += Data["Hiragana"];
-                    if (Data["Kanji"] !== null) {
+                    if (Data["Kanji"] !== null && Data["Kanji"] !== undefined) {
                         Text += ` (${Data["Kanji"]})`;
                     }
                     Text += "<br><br>";
@@ -56,24 +56,24 @@ function Info(NUM) {
 async function GeneralDico() {
     DICORETURN = await DatasVictory(DATAS_RANGE);
     const data = DICORETURN["Mots"]
-    
+
     var Text = `<option value="all">CATEGORIE</option>`;
     Object.keys(DICORETURN["Catégorie"]).forEach(Num => {
         var Data = DICORETURN["Catégorie"][Num];
         Text += `<option value="${Num}">${Data[LANGUEtoSEE]}</option>`;
     });
     document.getElementById("categorySelect").innerHTML = Text;
-    
+
     const categorySelect = document.getElementById('categorySelect');
     const numberList = document.getElementById('numberList');
-    
+
     function Loading() {
         const loader = document.getElementById('loader');
         loader.style.display = 'block';
         const overlay = document.getElementById('overlay');
         overlay.style.display = 'block';
     }
-    
+
     function NotLoading() {
         const loader = document.getElementById('loader');
         loader.style.display = 'none';
@@ -85,26 +85,24 @@ async function GeneralDico() {
         Loading();
         setTimeout(() => {
             const selectedCategory = categorySelect.value;
-            if (selectedCategory !== 'all') {
-                numberList.innerHTML = '';
+            numberList.innerHTML = '';
 
-                for (const [number, info] of Object.entries(data)) {
-                    if (selectedCategory === "all" || InCateg(selectedCategory, info)) {
-                        const li = document.createElement('li');
-                        let Test = `<div style='width: ${window.innerWidth < 1000 ? '75px' : '125px'};' class='grille-dico'>`;
+            for (const [number, info] of Object.entries(data)) {
+                if (selectedCategory === "all" || InCateg(selectedCategory, info)) {
+                    const li = document.createElement('li');
+                    let Test = `<div style='width: ${window.innerWidth < 1000 ? '75px' : '125px'};' class='grille-dico'>`;
 
-                        if (data[number]["Image"] === null || data[number]["Image"] === undefined) {
-                            Test += `<button onclick="Info(${number})" class="button-grille"><p class="p-grille">${data[number]["Mot"].toUpperCase()}</p></button>`;
-                        } else {
-                            Test += `<button onclick="Info(${number})" class="button-grille"><img class="img-grille" src="${data[number]["Image"]}"></button>`;
-                        }
-                        Test += "</div>";
-                        li.innerHTML = Test;
-                        numberList.appendChild(li);
+                    if (data[number]["Image"] === null || data[number]["Image"] === undefined) {
+                        Test += `<button onclick="Info(${number})" class="button-grille"><p class="p-grille">${data[number]["Mot"].toUpperCase()}</p></button>`;
+                    } else {
+                        Test += `<button onclick="Info(${number})" class="button-grille"><img class="img-grille" src="${data[number]["Image"]}"></button>`;
                     }
+                    Test += "</div>";
+                    li.innerHTML = Test;
+                    numberList.appendChild(li);
                 }
-                adjustFontSize();
             }
+            adjustFontSize();
             NotLoading();
         }, 100); // Ajoutez un délai pour permettre l'affichage du chargement
     }

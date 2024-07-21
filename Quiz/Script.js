@@ -45,6 +45,11 @@ var SCORE = 0;
 var HELPRES = 0;
 var md = new MobileDetect(window.navigator.userAgent);
 
+function isMobile() {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    return /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
+}
+
 function JapOrNot() {
     if (LANGUEtoTEACH === "jp-JP") {
         if (DICORETURN["Mots"][VAL]["Kanji"] !== undefined) {
@@ -55,7 +60,7 @@ function JapOrNot() {
 }
 
 document.getElementById('hiragana').addEventListener('focus', function () {
-    if (md.mobile()) {
+    if (md.mobile() || isMobile()) {
         if (localStorage.getItem("WebView")) {
             document.body.classList.add('close');
         } else {
@@ -65,7 +70,7 @@ document.getElementById('hiragana').addEventListener('focus', function () {
 });
 
 document.getElementById('hiragana').addEventListener('blur', function () {
-    if (md.mobile()) {
+    if (md.mobile() || isMobile()) {
         if (localStorage.getItem("WebView")) {
             document.body.classList.remove('close');
         } else {

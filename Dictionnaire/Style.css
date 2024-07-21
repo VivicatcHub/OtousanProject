@@ -26,6 +26,8 @@ li {
 }
 
 .pop-up {
+    max-height: 70vh; /* Définir la hauteur maximale */
+    overflow-y: auto;
     display: flex;
     position: fixed;
     z-index: 40;
@@ -72,13 +74,13 @@ li {
     border: 16px solid #f3f3f3;
     border-radius: 50%;
     border-top: 16px solid blue;
-    width: 120px;
-    height: 120px;
+    width: 10vw;
+    height: 10vw;
     animation: spin 2s linear infinite;
     z-index: 20;
     position: fixed;
     top: 50%;
-    left: 50%;
+    left: 40vw;
 }
 
 .p-grille {
