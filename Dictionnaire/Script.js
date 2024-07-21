@@ -57,6 +57,7 @@ async function GeneralDico() {
     DICORETURN = await DatasVictory(DATAS_RANGE);
     const data = DICORETURN["Mots"]
 
+    document.getElementById("menu").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Menu"];
     var Text = `<option value="all">CATEGORIE</option>`;
     Object.keys(DICORETURN["Catégorie"]).forEach(Num => {
         var Data = DICORETURN["Catégorie"][Num];
@@ -93,6 +94,7 @@ async function GeneralDico() {
                     let Test = `<div style='width: ${window.innerWidth < 1000 ? '75px' : '125px'};' class='grille-dico'>`;
 
                     if (data[number]["Image"] === null || data[number]["Image"] === undefined) {
+                        console.log(data, data[number], number);
                         Test += `<button onclick="Info(${number})" class="button-grille"><p class="p-grille">${data[number]["Mot"].toUpperCase()}</p></button>`;
                     } else {
                         Test += `<button onclick="Info(${number})" class="button-grille"><img class="img-grille" src="${data[number]["Image"]}"></button>`;
@@ -102,13 +104,13 @@ async function GeneralDico() {
                     numberList.appendChild(li);
                 }
             }
-            adjustFontSize();
             NotLoading();
+            adjustFontSize();
         }, 100); // Ajoutez un délai pour permettre l'affichage du chargement
     }
 
     categorySelect.addEventListener('change', filterNumbers);
 
     // Affiche tous les numéros au chargement initial
-    //filterNumbers();
+    // filterNumbers();
 }

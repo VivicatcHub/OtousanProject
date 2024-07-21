@@ -10,10 +10,12 @@ if (LANGUEtoTEACH === null) {
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    if (window.innerWidth > 800) {
+    if (window.innerWidth > 1000) {
         var boxSize = 120 + 40; // Taille des boîtes
+    } else if (window.innerWidth > 800) {
+        var boxSize = 100 + 40; // Taille des boîtes
     } else {
-        var boxSize = 50 + 40; // Taille des boîtes
+        var boxSize = 80 + 40; // Taille des boîtes
     }
     const boxes = document.querySelectorAll('.Box');
     const speed = 1;
@@ -87,7 +89,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             box.style.top = `${posY}px`;
         } while (isOverlapping(box, boxes));
     });
-
     moveBoxes();
 });
 
@@ -108,6 +109,7 @@ async function GeneralRecords() {
     document.getElementById("ImagierBox").innerHTML = `<div class="name" id="Imagier">${Object.keys(DICORETURN["Langue"]).map(Lan => DICORETURN["Langue"][Lan]).find(Lan => Lan["Langue"] === LANGUEtoSEE)?.["Imagier"]}</div><br>${Object.keys(DICORETURN["Langue"]).map(Lan => DICORETURN["Langue"][Lan]).find(Lan => Lan["Langue"] === LANGUEtoSEE)?.["Easy"]}: ${RecordsImagier[0]}<br>${Object.keys(DICORETURN["Langue"]).map(Lan => DICORETURN["Langue"][Lan]).find(Lan => Lan["Langue"] === LANGUEtoSEE)?.["Medium"]}: ${RecordsImagier[1]}<br>${Object.keys(DICORETURN["Langue"]).map(Lan => DICORETURN["Langue"][Lan]).find(Lan => Lan["Langue"] === LANGUEtoSEE)?.["Hard"]}: ${RecordsImagier[2]}`;
     document.getElementById("QuizBox").innerHTML = `<div class="name" id="Quiz">${Object.keys(DICORETURN["Langue"]).map(Lan => DICORETURN["Langue"][Lan]).find(Lan => Lan["Langue"] === LANGUEtoSEE)?.["Quiz"]}</div><br>${Object.keys(DICORETURN["Langue"]).map(Lan => DICORETURN["Langue"][Lan]).find(Lan => Lan["Langue"] === LANGUEtoSEE)?.["Easy"]}: ${RecordsQuiz[0]}<br>${Object.keys(DICORETURN["Langue"]).map(Lan => DICORETURN["Langue"][Lan]).find(Lan => Lan["Langue"] === LANGUEtoSEE)?.["Medium"]}: ${RecordsQuiz[1]}<br>${Object.keys(DICORETURN["Langue"]).map(Lan => DICORETURN["Langue"][Lan]).find(Lan => Lan["Langue"] === LANGUEtoSEE)?.["Hard"]}: ${RecordsQuiz[2]}`;
     document.getElementById("Menu").innerHTML = Object.keys(DICORETURN["Langue"]).map(Lan => DICORETURN["Langue"][Lan]).find(Lan => Lan["Langue"] === LANGUEtoSEE)?.["Menu"];
+    adjustFontSize();
 }
 
 GeneralRecords();

@@ -435,6 +435,15 @@ function adjustFontSize() {
         minFontSize: 8,
         widthOnly: false
     });
+    textFit(document.querySelectorAll(".Box"), {
+        alignHoriz: true,
+        alignVert: true,
+        multiLine: true,
+        detectMultiLine: true,
+        maxFontSize: 30,
+        minFontSize: 8,
+        widthOnly: false
+    });
     if (window.innerWidth > 650) {
         textFit(document.querySelectorAll(".p-grille-quiz"), {
             alignHoriz: true,
