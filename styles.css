@@ -20,6 +20,19 @@ body {
     display: none;
 }
 
+#loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid blue;
+    width: 10vw;
+    height: 10vw;
+    animation: spin 2s linear infinite;
+    z-index: 20;
+    position: fixed;
+    top: 50%;
+    left: 45vw;
+}
+
 #modal {
     position: fixed;
     top: 50%;
@@ -99,5 +112,15 @@ body {
 @media (max-width: 900px) {
     .container {
         grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
     }
 }

@@ -119,7 +119,19 @@ function ModifInputs(input) {
         } else {
             document.getElementById("audioFin").play();
             let Result = parseInt(SCORE) + parseInt(MARASCORE);
-            alert(`Bravo, tu as trouvé ${Result} mot(s)`);
+            switch (LANGUEtoSEE) {
+                case "jp-JP":
+                    var Temp = "1";
+                    break;
+                case "fr-FR":
+                    var Temp = "2";
+                    break;
+                default:
+                    var Temp = "0";
+                    break;
+            }
+            var Text = DICORETURN["Langue"][Temp]["Fin2"].replace('$', `${Result}`)
+            alert(Text);
             document.getElementById("container").remove();
             document.getElementById("hiragana").remove();
             RECORDS = RECORDS.split(",")
@@ -168,7 +180,7 @@ function LangueToSee(VALUE) {
         case "fr-FR":
             return "Mot";
         case "jp-JP":
-            if (VALUE["Kanji"] !== undefined) {
+            if (VALUE["Kanji"] !== undefined && VALUE["Kanji"] !== null) {
                 return "Kanji";
             } else {
                 return "Hiragana";
@@ -192,12 +204,12 @@ function CreerListeMots() {
                 break;
         }
         if (CAT === "all") {
-            var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && LangueToSee(value) !== undefined && LangueToSee(value) !== null).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
+            var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[LangueToSee(value)] !== undefined && value[LangueToSee(value)] !== null && InCateg(CAT, value)).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
         } else {
-            var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && LangueToSee(value) !== undefined && LangueToSee(value) !== null && InCateg(CAT, value)).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
+            var Liste = Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[LangueToSee(value)] !== undefined && value[LangueToSee(value)] !== null && InCateg(CAT, value)).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {});
         }
         let Len = parseInt(NBMOTS !== "all" ? Math.min(NBMOTS, Object.keys(Liste).length) : Object.keys(Liste).length);
-        // console.log(Liste, Len);
+        //console.log(Liste, Len);
         for (let i = 0; i < Len; i++) {
             let Temp = ValeurAleatoireDico(Liste);
             delete Liste[Temp];
@@ -313,6 +325,7 @@ function Launch() {
     // console.log(localStorage.getItem("LangT"));
     document.getElementById("container").classList = "containerB";
     CreerListeMots();
+    //console.log(LISTEMOTS);
     VAL = LISTEMOTS[0];
     LISTEMOTS = LISTEMOTS.slice(1);
     Block();
@@ -333,7 +346,7 @@ function Launch() {
                 var DataToAff = LANGUEtoSEE;
                 break;
         }
-        console.log(DICORETURN["Mots"][VAL][DataToAff], DataToAff)
+        console.log(DICORETURN["Mots"][VAL], DataToAff)
         document.getElementById("container").innerHTML = `<button disabled class="button-grille-quiz"><p class="p-grille-quiz">${DICORETURN["Mots"][VAL][DataToAff].toUpperCase()}</p></button>`;
     } else {
         document.getElementById("container").innerHTML = `<button disabled class="button-grille-quiz"><img class="img-grille-quiz" src="${DICORETURN["Mots"][VAL]["Image"]}"></img></button>`;
@@ -368,21 +381,21 @@ async function GeneralQuiz() {
         if (lang["Langue"] === LANGUEtoSEE && lang["Langue"] === LANGUEtoTEACH) {
             DICOLANGtoSEE = lang;
             DICOLANGtoTEACH = lang;
-            Temp += `<option selected value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
-            Temp2 += `<option selected value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+            Temp += `<option selected value="${lang["Langue"]}">${lang[LANGUEtoSEE]} ${lang["Langue"]}</option>`;
+            Temp2 += `<option selected value="${lang["Langue"]}">${lang[LANGUEtoSEE]} ${lang["Langue"]}</option>`;
         } else if (lang["Langue"] === LANGUEtoSEE) {
             DICOLANGtoSEE = lang;
-            Temp += `<option selected value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
-            Temp2 += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+            Temp += `<option selected value="${lang["Langue"]}">${lang[LANGUEtoSEE]} ${lang["Langue"]}</option>`;
+            Temp2 += `<option value="${lang["Langue"]}">${lang[LANGUEtoSEE]} ${lang["Langue"]}</option>`;
         } else if (lang["Langue"] === LANGUEtoTEACH) {
             DICOLANGtoTEACH = lang;
-            Temp += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
-            Temp2 += `<option selected value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+            Temp += `<option value="${lang["Langue"]}">${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === LANGUEtoSEE)[0][1][lang["Langue"]]} ${lang["Langue"]}</option>`;
+            Temp2 += `<option selected value="${lang["Langue"]}">${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === LANGUEtoSEE)[0][1][lang["Langue"]]} ${lang["Langue"]}</option>`;
         } else {
-            Temp += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
-            Temp2 += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+            Temp += `<option value="${lang["Langue"]}">${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === LANGUEtoSEE)[0][1][lang["Langue"]]} ${lang["Langue"]}</option>`;
+            Temp2 += `<option value="${lang["Langue"]}">${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === LANGUEtoSEE)[0][1][lang["Langue"]]} ${lang["Langue"]}</option>`;
         }
-    })
+    });
     var Text = `<button class="jouer" id="jouer" onclick="Launch()">${IfMarathon()}</button><div class="form-group"><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><div class="form-group"><select id="rep" name="rep"><option ${SelectedOrNot("1")}value="1">${DICOLANGtoSEE["Easy"]}</option><option ${SelectedOrNot("4")}value="4">${DICOLANGtoSEE["Medium"]}</option><option ${SelectedOrNot("10")}value="10">${DICOLANGtoSEE["Hard"]}</option></select>`;
     Temp = `<select id="catégorie" name="catégorie"><option value="all">${DICOLANGtoSEE["All"]}</option>`;
     Object.keys(DICORETURN["Catégorie"]).forEach(cat => {
@@ -394,7 +407,9 @@ async function GeneralQuiz() {
             Temp += `<option value="${cat}">${cati[localStorage.getItem("LangS")]}</option>`;
         }
     })
-    document.getElementById("container").innerHTML = Text + Temp + `</select><select id="nbmot" name="nbmot"><option ${SelectedOrNot3("all")}value="all">${DICOLANGtoSEE["All"]}</option><option ${SelectedOrNot3("25")}value="25">25 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("50")}value="50">50 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("100")}value="100">100 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("250")}value="250">250 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("other")}value="other">AUTRES</option></select></div>`;
+    document.getElementById("container").innerHTML = Text + Temp + `</select><select id="nbmot" name="nbmot"><option ${SelectedOrNot3("all")}value="all">${DICOLANGtoSEE["All"]}</option><option ${SelectedOrNot3("25")}value="25">25 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("50")}value="50">50 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("100")}value="100">100 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("250")}value="250">250 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("other")}value="other">${DICOLANGtoSEE["Autres"]}</option></select></div>`;
+    document.getElementById("modifier").innerHTML = DICOLANGtoSEE["Modify"];
+    document.getElementById("menu").innerHTML = `${DICOLANGtoSEE["Menu"]}`;
     /*
     Temp = `<select id="voice" name="voice"><option ${SelectedOrNot2("son-f")}value="son-f">${DICOLANGtoSEE["Voice"]} 1</option><option ${SelectedOrNot2("son-h")}value="son-h">${DICOLANGtoSEE["Voice"]} 2</option></select>`;
     if (window.innerWidth > 1000) {

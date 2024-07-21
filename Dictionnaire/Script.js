@@ -10,6 +10,10 @@ if (LANGUEtoTEACH === null) {
     localStorage.setItem('LangT', LANGUEtoTEACH);
 }
 
+function capitalizeWords(string) {
+    return string.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+}
+
 function Info(NUM) {
     var Data = DICORETURN["Mots"][NUM];
     console.log(Data);
@@ -30,13 +34,13 @@ function Info(NUM) {
             case "fr-FR":
                 if (Data["Mot"] !== null && Data["Mot"] !== undefined) {
                     Text += Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === LANGUEtoSEE)[0][1][Lan["Langue"]] + ":<br>";
-                    Text += Data["Mot"] + "<br><br>";
+                    Text += capitalizeWords(Data["Mot"]) + "<br><br>";
                 }
                 break;
             default:
                 if (Data[Lan["Langue"]] !== null && Data[Lan["Langue"]] !== undefined) {
                     Text += Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === LANGUEtoSEE)[0][1][Lan["Langue"]] + ":<br>";
-                    Text += Data[Lan["Langue"]] + "<br><br>";
+                    Text += capitalizeWords(Data[Lan["Langue"]]) + "<br><br>";
                 }
                 break;
         }
@@ -58,7 +62,7 @@ async function GeneralDico() {
     const data = DICORETURN["Mots"]
 
     document.getElementById("menu").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Menu"];
-    var Text = `<option value="all">CATEGORIE</option>`;
+    var Text = `<option value="all">${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Catégorie"]}</option>`;
     Object.keys(DICORETURN["Catégorie"]).forEach(Num => {
         var Data = DICORETURN["Catégorie"][Num];
         Text += `<option value="${Num}">${Data[LANGUEtoSEE]}</option>`;

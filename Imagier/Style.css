@@ -84,6 +84,31 @@ body {
     /* Animation pour le changement de couleur */
 }
 
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 10;
+    display: none;
+}
+
+#loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid blue;
+    width: 10vw;
+    height: 10vw;
+    animation: spin 2s linear infinite;
+    z-index: 20;
+    position: fixed;
+    top: 50%;
+    left: 45vw;
+}
+
 .containerD button:hover {
     background-color: #0056b3;
     /* Couleur de fond au survol */
@@ -188,13 +213,18 @@ a {
     /* Couleur de fond */
 }
 
+.containerB {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .grille {
     /* margin-left: 15px; */
     margin-top: 15px;
     display: flex;
     flex-wrap: wrap;
     background-size: cover;
-    border-radius: 0px !important;
 }
 
 .animate {
@@ -208,7 +238,6 @@ a {
     width: 125px;
     height: 125px;
     cursor: pointer;
-    border-radius: 0px !important;
 }
 
 .img-grille {
@@ -227,7 +256,12 @@ a {
     font-size: large;
     word-break: keep-all;
     overflow-wrap: break-word;
-    display: flex !important;
+    display: grid !important;
+    position: relative !important;
+}
+
+.textFitAlignVert {
+    position: relative !important;
 }
 
 #wtf {
@@ -265,8 +299,8 @@ input[type="text"]:focus {
     }
 
     .p-grille {
-        max-width: 70px;
-        max-height: 70px;
+        width: 70px;
+        height: 70px;
         font-size: x-small;
     }
 
@@ -315,7 +349,6 @@ input[type="text"]:focus {
     }
 
     .containerB {
-        display: flex;
         flex-direction: row;
     }
 
@@ -350,5 +383,15 @@ input[type="text"]:focus {
 
     90% {
         transform: translateX(-3px);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
     }
 }

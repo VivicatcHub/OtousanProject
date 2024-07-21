@@ -12,6 +12,8 @@
 </head>
 
 <body>
+    <div id="loader" style="display: none;"></div>
+    <div id="overlay" style="display: none;"></div>
     <div class="containerG">
         <div class="container" , id="container"></div>
         <input type="text" style="visibility: hidden;" oninput="ModifInputs(this)" id="hiragana" name="hiragana"
@@ -19,7 +21,7 @@
         </div>
         <div class="containerD" id="containerD">
             <button onclick="Modif()" id="modifier">MODIFIER</button>
-            <button id="modifier"><a style="text-decoration: none; color: white;" href="../Games/">MENU</a></button>
+            <a style="text-decoration: none; color: white;" href="../Games/"><button id="menu">MENU</button></a>
         </div>
     <audio id="audioFin" src="../victory.mp3"></audio>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mobile-detect/1.4.5/mobile-detect.min.js"></script>

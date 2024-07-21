@@ -193,19 +193,37 @@ async function DatasVictory(DATAS) {
     return Dico;
 }
 
+function Loading() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'block';
+    const overlay = document.getElementById('overlay');
+    overlay.style.display = 'block';
+}
+
+function NotLoading() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'none';
+    const overlay = document.getElementById('overlay');
+    overlay.style.display = 'none';
+}
+
 function Modif() {
-    let MODIF = 'true';
-    localStorage.setItem('Modif', MODIF);
-    localStorage.setItem('Marathon', []);
-    localStorage.setItem('MaraScore', 0);
-    localStorage.setItem('MaraHelp', 25);
-    console.log(Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Inverse"]);
-    if (Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Inverse"] == true) {
-        alert(`${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Modified"]}${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Data"]}!`);
-    } else {
-        alert(`${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Data"]} ${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Modified"]} !`);
-    }
-    location.reload();
+    Loading();
+    setTimeout(() => {
+        let MODIF = 'true';
+        localStorage.setItem('Modif', MODIF);
+        localStorage.setItem('Marathon', []);
+        localStorage.setItem('MaraScore', 0);
+        localStorage.setItem('MaraHelp', 25);
+        console.log(Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Inverse"]);
+        if (Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Inverse"] == true) {
+            alert(`${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Modified"]}${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Data"]}!`);
+        } else {
+            alert(`${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Data"]} ${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Modified"]} !`);
+        }
+        NotLoading();
+        location.reload();
+    }, 100); // Ajoutez un délai pour permettre l'affichage du chargement
 }
 
 function SpeakTextH(TEXT, LANG) {
@@ -289,14 +307,18 @@ function SameWord(KEY, RESULT) {
 
 function InCateg(CATEGORIE, VALUE) {
     // console.log(CATEGORIE, VALUE);
-    if (VALUE["Catégorie"] !== undefined) {
-        if (String(VALUE["Catégorie"]).split(",").includes(CATEGORIE) && (CATEGORIE !== "all" && !String(VALUE["Catégorie"]).split(",").includes("-1"))) {
+    if (VALUE["Catégorie"] !== undefined && VALUE["Catégorie"] !== null) {
+        if (String(VALUE["Catégorie"]).split(",").includes(CATEGORIE) || (CATEGORIE === "all" && !String(VALUE["Catégorie"]).split(",").includes("-1"))) {
             return true;
         } else {
             return false;
         }
     } else {
-        return false;
+        if (CATEGORIE === "all") {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
@@ -581,7 +603,7 @@ function Click(NB, NUM, X, Y, CAT) {
             alert(Text);
             let Result = SCOREforRECORD - SCORE;
             RECORDS = RECORDS.split(",")
-            switch(DIFF) {
+            switch (DIFF) {
                 case "1":
                     RECORDS[0] = Math.max(RECORDS[0], Result);
                     break;
@@ -768,21 +790,21 @@ async function general() {
         if (lang["Langue"] === LANGUEtoSEE && lang["Langue"] === LANGUEtoTEACH) {
             DICOLANGtoSEE = lang;
             DICOLANGtoTEACH = lang;
-            Temp += `<option selected value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
-            Temp2 += `<option selected value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+            Temp += `<option selected value="${lang["Langue"]}">${lang[LANGUEtoSEE]} ${lang["Langue"]}</option>`;
+            Temp2 += `<option selected value="${lang["Langue"]}">${lang[LANGUEtoSEE]} ${lang["Langue"]}</option>`;
         } else if (lang["Langue"] === LANGUEtoSEE) {
             DICOLANGtoSEE = lang;
-            Temp += `<option selected value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
-            Temp2 += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+            Temp += `<option selected value="${lang["Langue"]}">${lang[LANGUEtoSEE]} ${lang["Langue"]}</option>`;
+            Temp2 += `<option value="${lang["Langue"]}">${lang[LANGUEtoSEE]} ${lang["Langue"]}</option>`;
         } else if (lang["Langue"] === LANGUEtoTEACH) {
             DICOLANGtoTEACH = lang;
-            Temp += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
-            Temp2 += `<option selected value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+            Temp += `<option value="${lang["Langue"]}">${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === LANGUEtoSEE)[0][1][lang["Langue"]]} ${lang["Langue"]}</option>`;
+            Temp2 += `<option selected value="${lang["Langue"]}">${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === LANGUEtoSEE)[0][1][lang["Langue"]]} ${lang["Langue"]}</option>`;
         } else {
-            Temp += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
-            Temp2 += `<option value="${lang["Langue"]}">${lang["Nom"]} ${lang["Langue"]}</option>`;
+            Temp += `<option value="${lang["Langue"]}">${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === LANGUEtoSEE)[0][1][lang["Langue"]]} ${lang["Langue"]}</option>`;
+            Temp2 += `<option value="${lang["Langue"]}">${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === LANGUEtoSEE)[0][1][lang["Langue"]]} ${lang["Langue"]}</option>`;
         }
-    })
+    });
     var Text = `<button class="jouer" id="jouer" onclick="Launch()">${DICOLANGtoSEE["Play"]}</button><div class="form-group"><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}"><div class="form-group"><select id="rep" name="rep"><option ${SelectedOrNot("10")}value="10">${DICOLANGtoSEE["Easy"]}</option><option ${SelectedOrNot("4")}value="4">${DICOLANGtoSEE["Medium"]}</option><option ${SelectedOrNot("1")}value="1">${DICOLANGtoSEE["Hard"]}</option></select>`;
     Temp = `<select id="catégorie" name="catégorie"><option value="all">${DICOLANGtoSEE["All"]}</option>`;
     Object.keys(DICORETURN["Catégorie"]).forEach(cat => {
@@ -802,18 +824,19 @@ async function general() {
     document.getElementById("container2").innerHTML = Temp;
     let obj = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1];
     document.getElementById("modifier").innerHTML = obj["Modify"];
-    document.getElementById("menu").innerHTML = `<a href="../Games/">${obj["Menu"]}</a>`;
+    document.getElementById("menu").innerHTML = `${obj["Menu"]}`;
     if (window.innerWidth > 1000) {
         document.getElementById('keyInput').addEventListener('keydown', function (event) {
             detectedKey = event.key;
             this.value = detectedKey.toUpperCase();
             localStorage.setItem("Key1", detectedKey);
         });
-    
+
         document.getElementById('keyInput2').addEventListener('keydown', function (event) {
             detectedKey2 = event.key;
             this.value = detectedKey2.toUpperCase();
             localStorage.setItem("Key2", detectedKey2);
         });
     }
+    adjustFontSize();
 }

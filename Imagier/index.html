@@ -11,12 +11,14 @@
 </head>
 
 <body>
+    <div id="loader" style="display: none;"></div>
+    <div id="overlay" style="display: none;"></div>
     <div class="containerG">
         <div class="container" id="container"></div>
         <div class="container" id="container2"></div>
         <div class="containerD" id="containerD">
-            <button onclick="Modif()" id="modifier">MODIFIER</button>
-            <button id="menu"><a href="../Games/">MENU</a></button>
+            <button onclick="Modif()" class="adj" id="modifier">MODIFIER</button>
+            <a href="../Games/"><button id="menu">MENU</button></a>
         </div>
     </div>
     <audio id="audioFin" src="../victory.mp3"></audio>

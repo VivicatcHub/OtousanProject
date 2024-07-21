@@ -86,18 +86,6 @@ li {
     font-size: x-large;
 }
 
-#overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    z-index: 10;
-    display: none;
-}
-
 .img-grille {
     object-fit: cover;
     width: 100%;
@@ -114,6 +102,18 @@ li {
     cursor: pointer;
 }
 
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 10;
+    display: none;
+}
+
 #loader {
     border: 16px solid #f3f3f3;
     border-radius: 50%;
@@ -124,7 +124,7 @@ li {
     z-index: 20;
     position: fixed;
     top: 50%;
-    left: 40vw;
+    left: 45vw;
 }
 
 .p-grille {
