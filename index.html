@@ -20,6 +20,11 @@
             <img src="https://th.bing.com/th/id/R.0aa714ec1276591f52cb5deb4f7117a5?rik=pq%2feinwaCiPUWw&pid=ImgRaw&r=0"
                 alt="Records">
         </a>
+        <a href="Dictionnaire/" class="box">
+            <div class="name" id="Dictionnaire">DICTIONNAIRE</div>
+            <img src="https://th.bing.com/th/id/R.964d7f3ce9abf14728cf4d2562bc1c32?rik=JCXsGRAAqUeGEQ&pid=ImgRaw&r=0"
+                alt="Dictionnaire">
+        </a>
         <button onclick="Language()" class="box">
             <div class="name" id="Language">LANGUAGE</div>
             <img src="https://th.bing.com/th/id/R.0413359ff7b11252292c74483fbb6047?rik=yoJCVhls4W2TzQ&pid=ImgRaw&r=0"
@@ -82,6 +87,7 @@
             document.getElementById("Records").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Records"];
             document.getElementById("Language").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Language"];
             document.getElementById("Modify").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Modify"];
+            document.getElementById("Dictionnaire").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Dico"];
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
             if (urlParams.get('webview') == "true") {

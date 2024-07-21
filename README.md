@@ -1,1 +1,3 @@
-- création de grille ne marche pas pour peu d'image
+- ajouter catégorie "Image"
+- ajouter catégorie "Autre"
+- Implémenter le chargement partout

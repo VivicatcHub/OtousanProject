@@ -1,25 +1,66 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu déroulant à choix multiple</title>
+    <title>Loading Animation Example with Web Worker</title>
+    <style>
+        #loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid blue;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Choisissez vos fruits préférés</h1>
-    <form>
-        <div class="custom-select">
-            <select id="fruits" name="fruits" multiple size="5">
-                <option value="pomme">Pomme</option>
-                <option value="banane">Banane</option>
-                <option value="orange">Orange</option>
-                <option value="mangue">Mangue</option>
-                <option value="kiwi">Kiwi</option>
-            </select>
-        </div>
-    </form>
+    <div id="loader"></div>
+    <div id="result"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loader = document.getElementById('loader');
+            const result = document.getElementById('result');
+
+            // Vérifiez si le navigateur prend en charge les Web Workers
+            if (window.Worker) {
+                const worker = new Worker('worker.js');
+
+                worker.onmessage = function (e) {
+                    displayResult(e.data);
+                };
+
+                worker.postMessage('start');
+
+                // Afficher le loader pendant le calcul
+                loader.style.display = 'block';
+            } else {
+                result.innerText = 'Votre navigateur ne supporte pas les Web Workers.';
+            }
+
+            // Fonction pour afficher le résultat après le calcul
+            function displayResult(sum) {
+                result.innerText = `Result: ${sum}`;
+                loader.style.display = 'none';
+            }
+        });
+
+
+    </script>
 </body>
 
 </html>

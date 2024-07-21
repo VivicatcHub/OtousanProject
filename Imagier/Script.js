@@ -405,9 +405,9 @@ function CreerGrille(Y, X, DATA, CAT) {
 
                 }
                 // console.log(rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1))))
-                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y}, '${CAT}')"><p class="p-grille" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;">${DATA[Num][DataToAff].toUpperCase()}</p></button>`
+                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y}, '${CAT}')"><p class="p-grille" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;">${DATA[Num][DataToAff].toUpperCase()}</p></button>`;
             } else {
-                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y}, '${CAT}')"><img class="img-grille" src="${DATA[Num]["Image"]}"></img></button>`
+                Grille += `<button id="${Nb}" style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))};" class="button-grille" onclick="Click(${Nb}, ${Num}, ${X}, ${Y}, '${CAT}')"><img class="img-grille" src="${DATA[Num]["Image"]}"></img></button>`;
             }
         }
         Grille += "<br>";
@@ -422,18 +422,18 @@ function adjustFontSize() {
         alignVert: true,
         multiLine: true,
         detectMultiLine: true,
-        maxFontSize: 15,
+        maxFontSize: 30,
         minFontSize: 8,
-        widthOnly: false,
+        widthOnly: false
     });
     textFit(document.querySelectorAll(".adj"), {
         alignHoriz: true,
         alignVert: true,
         multiLine: true,
         detectMultiLine: true,
-        maxFontSize: 15,
+        maxFontSize: 30,
         minFontSize: 8,
-        widthOnly: false,
+        widthOnly: false
     });
     if (window.innerWidth > 650) {
         textFit(document.querySelectorAll(".p-grille-quiz"), {
@@ -443,7 +443,7 @@ function adjustFontSize() {
             detectMultiLine: true,
             maxFontSize: 50,
             minFontSize: 10,
-            widthOnly: false,
+            widthOnly: false
         });
     } else {
         textFit(document.querySelectorAll(".p-grille-quiz"), {
@@ -453,7 +453,7 @@ function adjustFontSize() {
             detectMultiLine: true,
             maxFontSize: 30,
             minFontSize: 10,
-            widthOnly: false,
+            widthOnly: false
         });
     }
 }
