@@ -132,10 +132,13 @@ function ModifInputs(input) {
             }
             var Text = DICORETURN["Langue"][Temp]["Fin2"].replace('$', `${Result}`)
             alert(Text);
+            localStorage.setItem('Marathon', []);
+            localStorage.setItem('MaraScore', 0);
+            localStorage.setItem('MaraHelp', 25);
             document.getElementById("container").remove();
             document.getElementById("hiragana").remove();
             RECORDS = RECORDS.split(",")
-            switch(DIFF) {
+            switch (DIFF) {
                 case "1":
                     RECORDS[0] = Math.max(RECORDS[0], Result);
                     break;
@@ -163,7 +166,7 @@ function ModifInputs(input) {
             default:
                 var DataToAff = LANGUEtoSEE;
                 break;
-    
+
         }
         if (DICORETURN["Mots"][VAL]["Image"] === null || DICORETURN["Mots"][VAL]["Image"] === undefined) {
             console.log(DICORETURN["Mots"][VAL], DataToAff);
@@ -309,14 +312,14 @@ function Launch() {
     }
     DIFF = document.getElementById("rep").value;
     if (DIFF === "1") {
-        HELPRES = "all";    
+        HELPRES = "all";
     } else if (DIFF === "4") {
         HELPRES = Math.min(25, parseInt(localStorage.getItem("MaraHelp")));
     } else {
         HELPRES = Math.min(5, parseInt(localStorage.getItem("MaraHelp")));
     }
     localStorage.setItem("Diff", DIFF)
-    document.getElementById("containerD").innerHTML = `<p id="wtf"></p><div style="align-items: center;display:flex; flex-direction: column;border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 5px;">${DICOLANGtoSEE["Help"]}<br><button class="adj" id="help" onclick="Help()">${DICOLANGtoSEE["Réponse"]}</button><div><img style="cursor: pointer;" src="../speaker_f.png" onclick="HelpAudio('f')" id="audio-h"></img><img style="cursor: pointer;" src="../speaker_h.png" onclick="HelpAudio('h')" id="audio-f"></img></div><div id="RepRes">${DICOLANGtoSEE["Left2"]}:<br>${HelpRes()}</div></div><button class="adj" id="retry" onclick="Pause()">${DICOLANGtoSEE["Pause"]}</button><button class="adj" id="pause" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
+    document.getElementById("containerD").innerHTML = `<p id="wtf"></p><div style="align-items: center;display:flex; flex-direction: column;border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 5px;">${DICOLANGtoSEE["Help"]}<br><button class="adj" id="help" onclick="Help()">${DICOLANGtoSEE["Réponse"]}</button><div><img style="cursor: pointer;" src="../speaker_f.png" onclick="HelpAudio('f')" id="audio-h"></img><img style="cursor: pointer;" src="../speaker_h.png" onclick="HelpAudio('h')" id="audio-f"></img></div><div id="RepRes">${DICOLANGtoSEE["Left"]}:<br>${HelpRes()}</div></div><button class="adj" id="retry" onclick="Pause()">${DICOLANGtoSEE["Pause"]}</button><button class="adj" id="pause" onclick="Retry()">${DICOLANGtoSEE["Retry"]}</button>`;
     document.getElementById("hiragana").style.visibility = "visible";
     CAT = document.getElementById("catégorie").value;
     localStorage.setItem("Cat", CAT)
