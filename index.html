@@ -23,10 +23,15 @@
                 alt="Records">
         </a>
         <a href="Dictionnaire/" class="box">
-            <div class="name" id="Dictionnaire">DICTIONNAIRE</div>
+            <div class="name" id="Dictionnaire">DICTIONARY</div>
             <img src="https://th.bing.com/th/id/R.964d7f3ce9abf14728cf4d2562bc1c32?rik=JCXsGRAAqUeGEQ&pid=ImgRaw&r=0"
                 alt="Dictionnaire">
         </a>
+        <button onclick="Settings()" class="box">
+            <div class="name" id="Paramètres">SETTINGS</div>
+            <img src="https://th.bing.com/th/id/OIP.QJFGYKRPzwcCfxzljaWIkwHaFC?rs=1&pid=ImgDetMain"
+                alt="Paramètres">
+        </button>
         <button onclick="Language()" class="box">
             <div class="name" id="Language">LANGUAGE</div>
             <img src="https://th.bing.com/th/id/R.0413359ff7b11252292c74483fbb6047?rik=yoJCVhls4W2TzQ&pid=ImgRaw&r=0"
@@ -44,6 +49,32 @@
     <script src="Data.js"></script>
     <script src="Imagier/Script.js"></script>
     <script>
+        function Settings() {
+            const overlay = document.getElementById('overlay');
+            const modal = document.getElementById('modal');
+            // Show the modal and overlay
+            function showModal() {
+                overlay.style.display = 'block';
+                var Temp = '<select id="dropdown">';
+                Temp += `<option value="mobile">${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Mobile"]}</option><option value="PC">${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Pc"]}</option>`;
+                modal.innerHTML = Temp + "</select><button id='submit'>OK</button>";
+                const submitButton = document.getElementById('submit');
+                modal.style.display = 'block';
+                // Hide the modal when the submit button is clicked
+                submitButton.addEventListener('click', function () {
+                    hideModal();
+                });
+            }
+            // Hide the modal and overlay
+            function hideModal() {
+                overlay.style.display = 'none';
+                modal.style.display = 'none';
+                localStorage.setItem("Type", document.getElementById("dropdown").value);
+            }
+            // Show the modal on page load
+            showModal();
+        }
+
         function Language() {
             const overlay = document.getElementById('overlay');
             const modal = document.getElementById('modal');
@@ -85,6 +116,7 @@
             document.getElementById("Language").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Language"];
             document.getElementById("Modify").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Modify"];
             document.getElementById("Dictionnaire").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Dico"];
+            document.getElementById("Paramètres").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Paramètres"];
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
             if (urlParams.get('webview') == "true") {

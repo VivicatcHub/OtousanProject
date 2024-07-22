@@ -60,7 +60,7 @@ function JapOrNot() {
 }
 
 document.getElementById('hiragana').addEventListener('focus', function () {
-    if (md.mobile() || isMobile()) {
+    if (localStorage.getItem("Type") === "mobile" || ((md.mobile() || isMobile()) && localStorage.getItem("Type") !== "PC")) {
         if (localStorage.getItem("WebView")) {
             document.body.classList.add('close');
         } else {
@@ -70,7 +70,7 @@ document.getElementById('hiragana').addEventListener('focus', function () {
 });
 
 document.getElementById('hiragana').addEventListener('blur', function () {
-    if (md.mobile() || isMobile()) {
+    if (localStorage.getItem("Type") === "mobile" || ((md.mobile() || isMobile()) && localStorage.getItem("Type") !== "PC")) {
         if (localStorage.getItem("WebView")) {
             document.body.classList.remove('close');
         } else {
