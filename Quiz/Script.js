@@ -360,8 +360,6 @@ function Launch() {
 function SelectedOrNot3(NB) {
     if (NB == localStorage.getItem("NbMots")) {
         return "selected ";
-    } else if (localStorage.getItem("NbMots") !== "all") {
-        return "selected ";
     } else {
         return "";
     }
@@ -413,25 +411,4 @@ async function GeneralQuiz() {
     document.getElementById("container").innerHTML = Text + Temp + `</select><select id="nbmot" name="nbmot"><option ${SelectedOrNot3("all")}value="all">${DICOLANGtoSEE["All"]}</option><option ${SelectedOrNot3("25")}value="25">25 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("50")}value="50">50 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("100")}value="100">100 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("250")}value="250">250 ${DICOLANGtoSEE["Word"]}</option><option ${SelectedOrNot3("other")}value="other">${DICOLANGtoSEE["Autres"]}</option></select></div>`;
     document.getElementById("modifier").innerHTML = DICOLANGtoSEE["Modify"];
     document.getElementById("menu").innerHTML = `${DICOLANGtoSEE["Menu"]}`;
-    /*
-    Temp = `<select id="voice" name="voice"><option ${SelectedOrNot2("son-f")}value="son-f">${DICOLANGtoSEE["Voice"]} 1</option><option ${SelectedOrNot2("son-h")}value="son-h">${DICOLANGtoSEE["Voice"]} 2</option></select>`;
-    if (window.innerWidth > 1000) {
-        Temp += `<input type="text" id="keyInput" value="${detectedKey}" readonly><input type="text" id="keyInput2" value="${detectedKey2}" readonly>`;
-    }
-    document.getElementById("container2").innerHTML = Temp;
-    let obj = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1];
-    document.getElementById("modifier").innerHTML = obj["Modify"];
-    if (window.innerWidth > 1000) {
-        document.getElementById('keyInput').addEventListener('keydown', function (event) {
-            detectedKey = event.key;
-            this.value = detectedKey.toUpperCase();
-            localStorage.setItem("Key1", detectedKey);
-        });
-    
-        document.getElementById('keyInput2').addEventListener('keydown', function (event) {
-            detectedKey2 = event.key;
-            this.value = detectedKey2.toUpperCase();
-            localStorage.setItem("Key2", detectedKey2);
-        });
-    }*/
 }
