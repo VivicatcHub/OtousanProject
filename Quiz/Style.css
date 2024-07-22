@@ -54,6 +54,7 @@ body {
 
 .open {
     align-items: flex-end;
+    height: 50vh;
 }
 
 .close {
