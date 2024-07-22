@@ -398,7 +398,7 @@ async function GeneralQuiz() {
         }
     });
     var Text = `<button class="jouer" id="jouer" onclick="Launch()">${IfMarathon()}</button><div class="form-group"><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><div class="form-group"><select id="rep" name="rep"><option ${SelectedOrNot("1")}value="1">${DICOLANGtoSEE["Easy"]}</option><option ${SelectedOrNot("4")}value="4">${DICOLANGtoSEE["Medium"]}</option><option ${SelectedOrNot("10")}value="10">${DICOLANGtoSEE["Hard"]}</option></select>`;
-    Temp = `<select id="catégorie" name="catégorie"><option value="all">${DICOLANGtoSEE["All"]}</option>`;
+    Temp = `<select id="catégorie" name="catégorie"><option value="all">${DICOLANGtoSEE["All"]}</option><option value="img">${DICOLANGtoSEE["Images"]}</option><option value="oth">${DICOLANGtoSEE["Autres"]}</option>`;
     Object.keys(DICORETURN["Catégorie"]).forEach(cat => {
         let cati = DICORETURN["Catégorie"][cat];
         // console.log(cat);

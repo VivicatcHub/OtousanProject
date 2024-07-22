@@ -42,6 +42,4 @@ We plan to add more languages and features in the future. Stay tuned for updates
 
 ## Erreurs à corriger / Errors to be corrected
 
-- Ajouter catégorie **Image**
-- Ajouter catégorie **Autre**
 - Implémenter le chargement partout

@@ -815,7 +815,7 @@ async function general() {
         }
     });
     var Text = `<button class="jouer" id="jouer" onclick="Launch()">${DICOLANGtoSEE["Play"]}</button><div class="form-group"><select onchange="ModifLang()" id="language" name="language">` + Temp + `</select><select id="language2" name="language2">` + Temp2 + `</select></div><input type="number" id="number-y" name="number" min="1" max="50" value="${Y}"><input type="number" id="number-x" name="number" min="1" max="50" value="${X}"><div class="form-group"><select id="rep" name="rep"><option ${SelectedOrNot("10")}value="10">${DICOLANGtoSEE["Easy"]}</option><option ${SelectedOrNot("4")}value="4">${DICOLANGtoSEE["Medium"]}</option><option ${SelectedOrNot("1")}value="1">${DICOLANGtoSEE["Hard"]}</option></select>`;
-    Temp = `<select id="catégorie" name="catégorie"><option value="all">${DICOLANGtoSEE["All"]}</option>`;
+    Temp = `<select id="catégorie" name="catégorie"><option value="all">${DICOLANGtoSEE["All"]}</option><option value="img">${DICOLANGtoSEE["Images"]}</option><option value="oth">${DICOLANGtoSEE["Autres"]}</option>`;
     Object.keys(DICORETURN["Catégorie"]).forEach(cat => {
         let cati = DICORETURN["Catégorie"][cat];
         // console.log(cat);
