@@ -4,7 +4,6 @@ body {
     display: flex;
     justify-content: space-around;
     font-family: 'Roboto';
-    height: 50vh;
 }
 
 .button-grille-quiz {
@@ -62,6 +61,10 @@ body {
 }
 
 @media (max-width: 650px) {
+    body {
+        height: 50vh;
+    }
+    
     .button-grille-quiz {
         -webkit-appearance: none;
         -moz-appearance: none;
