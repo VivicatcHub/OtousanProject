@@ -663,13 +663,18 @@ function Click(NB, NUM, X, Y, CAT) {
                 } else {
                     var cas = ValeurAleatoireDico(Object.fromEntries(Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value["Catégorie"] === parseInt(CAT) && value[Temp] !== undefined && value[Temp] !== null && value[DataToAff] !== undefined && value[DataToAff] !== null)));
                 }
+                if (CAT === "all") {
+                    var cas = ValeurAleatoireDico(Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[DataToAff] !== undefined && value[DataToAff] !== null && InCateg(CAT, value)).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {}));
+                } else {
+                    var cas = ValeurAleatoireDico(Object.entries(DICORETURN["Mots"]).filter(([key, value]) => value[Temp] !== undefined && value[Temp] !== null && value[DataToAff] !== undefined && value[DataToAff] !== null && InCateg(CAT, value)).reduce((acc, [key, value]) => { acc[key] = value; return acc; }, {}));
+                }
                 CASES.push(cas);
                 as.onclick = function () {
                     Click(i, cas, X, Y, CAT);
                 }
                 let x = Math.floor(i / Y);
                 let y = i % Y - 1;
-                console.log(x, y)
+                console.log(DICORETURN["Mots"][cas], cas);
                 if (DICORETURN["Mots"][cas]["Image"] === null || DICORETURN["Mots"][cas]["Image"] === undefined) {
                     as.innerHTML = `<p style="background-color: ${rgbToHex(interpolateColor((x * Y + y) / (X * Y - 1)))}; color: white;" class="p-grille">${DICORETURN["Mots"][cas][DataToAff].toUpperCase()}</p>`;
                 } else {

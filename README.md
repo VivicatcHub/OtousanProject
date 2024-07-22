@@ -1,3 +1,4 @@
 - ajouter catégorie "Image"
 - ajouter catégorie "Autre"
 - Implémenter le chargement partout
+- Nb => Autres à chaque fois
