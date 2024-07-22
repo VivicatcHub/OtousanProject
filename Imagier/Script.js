@@ -307,15 +307,19 @@ function SameWord(KEY, RESULT) {
 
 function InCateg(CATEGORIE, VALUE) {
     // console.log(CATEGORIE, VALUE);
-    if (VALUE["Catégorie"] !== undefined && VALUE["Catégorie"] !== null) {
-        if (String(VALUE["Catégorie"]).split(",").includes(CATEGORIE) || (CATEGORIE === "all" && !String(VALUE["Catégorie"]).split(",").includes("-1"))) {
+    if (CATEGORIE === "all") {
+        if (VALUE["Catégorie"] !== undefined && VALUE["Catégorie"] !== null) {
             return true;
         } else {
-            return false;
+            return !String(VALUE["Catégorie"]).split(",").includes("-1");
         }
+    } else if (CATEGORIE === "img") {
+        return (VALUE["Image"] !== null && VALUE["Image"] !== undefined);
+    } else if (CATEGORIE === "oth") {
+        return (VALUE["Catégorie"] === null || VALUE["Catégorie"] === undefined);
     } else {
-        if (CATEGORIE === "all") {
-            return true;
+        if (VALUE["Catégorie"] !== undefined && VALUE["Catégorie"] !== null) {
+            return String(VALUE["Catégorie"]).split(",").includes(CATEGORIE);
         } else {
             return false;
         }

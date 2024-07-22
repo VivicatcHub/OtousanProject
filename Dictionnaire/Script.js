@@ -62,7 +62,7 @@ async function GeneralDico() {
     const data = DICORETURN["Mots"]
 
     document.getElementById("menu").innerHTML = Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Menu"];
-    var Text = `<option value="all">${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Catégorie"]}</option>`;
+    var Text = `<option value="all">${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Catégorie"]}</option><option value="img">${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Images"]}</option><option value="oth">${Object.entries(DICORETURN["Langue"]).filter(([key, value]) => value["Langue"] === localStorage.getItem("LangS"))[0][1]["Autres"]}</option>`;
     Object.keys(DICORETURN["Catégorie"]).forEach(Num => {
         var Data = DICORETURN["Catégorie"][Num];
         Text += `<option value="${Num}">${Data[LANGUEtoSEE]}</option>`;
